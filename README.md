@@ -1,4 +1,4 @@
-# integrate-project
+# Integrate-project
 
 * 대학 종합 프로젝트
 * 참여자: 이건우, 이정묵, 류일웅
