@@ -3,13 +3,12 @@ package kr.ac.gachon.searchdogs
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import com.google.android.material.bottomnavigation.BottomNavigationView
-import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_dict.*
-import kr.ac.gachon.searchdogs.R
 
 class MainActivity : AppCompatActivity() {
 
@@ -18,26 +17,27 @@ class MainActivity : AppCompatActivity() {
         android.Manifest.permission.READ_EXTERNAL_STORAGE
     )
     private lateinit var textMessage: TextView
-    private val onNavigationItemSelectedListener = BottomNavigationView.OnNavigationItemSelectedListener { item ->
-        when (item.itemId) {
-            R.id.Gallery -> {
-                textMessage.setText(R.string.title_home)
-                return@OnNavigationItemSelectedListener true
-            }
-            R.id.Camera -> {
+    private val onNavigationItemSelectedListener =
+        BottomNavigationView.OnNavigationItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.Gallery -> {
+                    textMessage.setText(R.string.title_home)
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.Camera -> {
 
-                return@OnNavigationItemSelectedListener true
+                    return@OnNavigationItemSelectedListener true
+                }
+                R.id.Dictionary -> {
+                    val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+                    recyclerView_dict.addItemDecoration(divider)
+                    recyclerView_dict.adapter = DictAdapter()
+                    recyclerView_dict.layoutManager = LinearLayoutManager(this)
+                    return@OnNavigationItemSelectedListener true
+                }
             }
-            R.id.Dictionary -> {
-                val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-                recyclerView_dict.addItemDecoration(divider)
-                recyclerView_dict.adapter = DictAdapter()
-                recyclerView_dict.layoutManager = LinearLayoutManager(this)
-                return@OnNavigationItemSelectedListener true
-            }
+            false
         }
-        false
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,7 +51,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     fun checkPermission() { // 권한 설정 함수_j
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M) { return }
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return
+        }
         for (pms: String in permissionList) {
             var permission_chk = checkSelfPermission(pms)
 
@@ -61,4 +63,5 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
+
 }
