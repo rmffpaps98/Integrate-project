@@ -30,8 +30,11 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_margin="32dp"
-                android:src="@drawable/ic_camera"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="32dp"
+                android:src="@android:drawable/ic_menu_camera"
                 app:backgroundTint="@android:color/white"
                 app:fabSize="normal" />
 
@@ -40,8 +43,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:layout_margin="32dp"
-                android:src="@drawable/ic_flash"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="32dp"
+                android:src="@android:drawable/alert_light_frame"
                 app:backgroundTint="@android:color/white"
                 app:fabSize="normal" />
 
@@ -51,8 +57,11 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentBottom="true"
-                android:layout_margin="32dp"
-                android:src="@drawable/ic_switch_camera"
+                android:layout_marginStart="32dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="32dp"
+                android:src="@android:drawable/ic_menu_always_landscape_portrait"
                 app:backgroundTint="@android:color/white"
                 app:fabSize="normal" />
 
