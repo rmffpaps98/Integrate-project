@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "651851151242-1lvlnqku3qf4kn511mvd5oan045o9tfo.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "kr.ac.gachon.watchdogs",
+            "certificate_hash": "45f583cf19ebcd648a5101f8cae43728f63e9e11"
+          }
+        },
+        {
           "client_id": "651851151242-hkv8a97s2r41h6kq9q9t7h23lbatnnca.apps.googleusercontent.com",
           "client_type": 3
         }
