@@ -6,6 +6,9 @@ import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.TextView
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import kotlinx.android.synthetic.main.activity_dict.*
 
 class MainActivity : AppCompatActivity() {
 
@@ -21,11 +24,14 @@ class MainActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.Camera -> {
-                textMessage.setText(R.string.title_dashboard)
+
                 return@OnNavigationItemSelectedListener true
             }
             R.id.Dictionary -> {
-                textMessage.setText(R.string.title_notifications)
+                val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
+                recyclerView_dict.addItemDecoration(divider)
+                recyclerView_dict.adapter = DictAdapter()
+                recyclerView_dict.layoutManager = LinearLayoutManager(this)
                 return@OnNavigationItemSelectedListener true
             }
         }
