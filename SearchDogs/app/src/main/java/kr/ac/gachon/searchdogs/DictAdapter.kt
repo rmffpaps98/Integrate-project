@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import kr.ac.gachon.searchdogs.R
 
 class DictAdapter () : RecyclerView.Adapter<DictAdapter.ItemViewHolder>() {
     override fun getItemCount(): Int {

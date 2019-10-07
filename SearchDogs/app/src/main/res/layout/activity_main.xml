@@ -8,64 +8,94 @@
         android:layout_height="match_parent"
         tools:context="kr.ac.gachon.searchdogs.MainActivity">
 
-    <RelativeLayout
+<!--    <RelativeLayout-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:background="@android:color/black"-->
+<!--            app:layout_constraintBottom_toTopOf="@+id/nav_view"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            tools:context=".MainActivity">-->
+
+    <!-- 카메라 어플이 새로 실행될때 사용 -->
+<!--        <ImageView-->
+<!--            android:id="@+id/image_view"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_gravity="center_horizontal"-->
+<!--            android:background="@drawable/img_placehlder" />-->
+
+<!--        <Button-->
+<!--            android:id="@+id/btn_capture"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_alignParentBottom="true"-->
+<!--            android:layout_centerHorizontal="true"-->
+<!--            android:layout_marginStart="32dp"-->
+<!--            android:layout_marginTop="32dp"-->
+<!--            android:layout_marginEnd="32dp"-->
+<!--            android:layout_marginBottom="32dp"-->
+<!--            android:text="Capture" />-->
+
+        <!-- 라이브러리 실행 시 사용 -->
+<!--        <io.fotoapparat.view.CameraView-->
+<!--                android:id="@+id/camera_view"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_above="@id/fab_camera" />-->
+
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--                android:id="@+id/fab_camera"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_alignParentBottom="true"-->
+<!--                android:layout_centerHorizontal="true"-->
+<!--                android:layout_marginStart="32dp"-->
+<!--                android:layout_marginTop="32dp"-->
+<!--                android:layout_marginEnd="32dp"-->
+<!--                android:layout_marginBottom="32dp"-->
+<!--                android:src="@android:drawable/ic_menu_camera"-->
+<!--                app:backgroundTint="@android:color/white"-->
+<!--                app:fabSize="normal" />-->
+
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--                android:id="@+id/fab_flash"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_alignParentBottom="true"-->
+<!--                android:layout_marginStart="32dp"-->
+<!--                android:layout_marginTop="32dp"-->
+<!--                android:layout_marginEnd="32dp"-->
+<!--                android:layout_marginBottom="32dp"-->
+<!--                android:src="@android:drawable/alert_light_frame"-->
+<!--                app:backgroundTint="@android:color/white"-->
+<!--                app:fabSize="normal" />-->
+
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--                android:id="@+id/fab_switch_camera"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_alignParentRight="true"-->
+<!--                android:layout_alignParentBottom="true"-->
+<!--                android:layout_marginStart="32dp"-->
+<!--                android:layout_marginTop="32dp"-->
+<!--                android:layout_marginEnd="32dp"-->
+<!--                android:layout_marginBottom="32dp"-->
+<!--                android:src="@android:drawable/ic_menu_always_landscape_portrait"-->
+<!--                app:backgroundTint="@android:color/white"-->
+<!--                app:fabSize="normal" />-->
+
+<!--    </RelativeLayout>-->
+
+    <FrameLayout
+            android:id="@+id/main_frame"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:background="@android:color/black"
             app:layout_constraintBottom_toTopOf="@+id/nav_view"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:context=".MainActivity">
-
-        <io.fotoapparat.view.CameraView
-                android:id="@+id/camera_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_above="@id/fab_camera" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_camera"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="32dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="32dp"
-                android:src="@android:drawable/ic_menu_camera"
-                app:backgroundTint="@android:color/white"
-                app:fabSize="normal" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_flash"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="32dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="32dp"
-                android:src="@android:drawable/alert_light_frame"
-                app:backgroundTint="@android:color/white"
-                app:fabSize="normal" />
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/fab_switch_camera"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:layout_marginStart="32dp"
-                android:layout_marginTop="32dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="32dp"
-                android:src="@android:drawable/ic_menu_always_landscape_portrait"
-                app:backgroundTint="@android:color/white"
-                app:fabSize="normal" />
-
-    </RelativeLayout>
+            app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/nav_view"
