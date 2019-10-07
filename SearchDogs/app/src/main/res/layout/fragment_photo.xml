@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/ll_photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
@@ -13,13 +14,13 @@
         <!--        />-->
 
         <SurfaceView
-                android:id="@+id/surfaceView"
+                android:id="@+id/sfv_photo"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:visibility="gone" />
 
         <Button
-                android:id="@+id/startBtn"
+                android:id="@+id/btn_photo_start"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal|bottom"
@@ -27,7 +28,7 @@
                 android:visibility="gone" />
 
         <TextView
-                android:id="@+id/showPermissionMsg"
+                android:id="@+id/msg_photo_permission"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

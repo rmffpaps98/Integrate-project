@@ -33,11 +33,11 @@ class GalleryFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_gallery, container, false)
 
-        mImageView = view.findViewById(R.id.img_dogGallery)
-        mButtonView = view.findViewById(R.id.btn_gallery)
-        llSendCheckBottomSheet = view.findViewById(R.id.ll_bnv_layout)
+        mImageView = view.findViewById(R.id.img_gallery_dogGallery)
+        mButtonView = view.findViewById(R.id.btn_gallery_upload)
+        llSendCheckBottomSheet = view.findViewById(R.id.ll_check_type)
 
-        view.findViewById<Button>(R.id.btn_gallery).setOnClickListener { view ->
+        view.findViewById<Button>(R.id.btn_gallery_upload).setOnClickListener { view ->
             startGallery()
         }
 
@@ -51,7 +51,7 @@ class GalleryFragment : Fragment() {
             val returnUri = data!!.data
             val bitmapImage = MediaStore.Images.Media.getBitmap(activity!!.contentResolver, returnUri)
 
-            img_dogGallery.setImageBitmap(bitmapImage)
+            img_gallery_dogGallery.setImageBitmap(bitmapImage)
             Log.d("CHECK", "이미지를 설정함")
             isSetDogImage = true
             mButtonView!!.visibility = View.INVISIBLE

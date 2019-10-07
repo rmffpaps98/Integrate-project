@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kr.ac.gachon.searchdogs.camera.CameraFragment
 import kr.ac.gachon.searchdogs.fragment.BottomSheetFragment
 import kr.ac.gachon.searchdogs.fragment.GalleryFragment
 
@@ -25,17 +26,15 @@ class MainActivity : AppCompatActivity(),
         mTextView = findViewById(R.id.txt_check_type_title)
 
         // bottomNavigationView의 아이템이 선택될 때 호출될 리스너 등록
-        val navView = findViewById<View>(R.id.nav_view) as BottomNavigationView
+        val navView = findViewById<View>(R.id.bnv_main) as BottomNavigationView
         navView.setOnNavigationItemSelectedListener(this)
-
-        bottomNavigationViewHeight = navView.measuredHeight
 
         /**
         * TODO: 카메라 기능 완성되면
             navView.selectedItemId = R.id.camera 로 바꿔야함
         * by 류일웅
          */
-        navView.selectedItemId = R.id.Gallery
+        navView.selectedItemId = R.id.Camera
     }
 
     override fun onNavigationItemSelected(p0: MenuItem): Boolean {
@@ -44,22 +43,15 @@ class MainActivity : AppCompatActivity(),
                 val galleryFragment = GalleryFragment()
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.main_frame, galleryFragment)
+                    .replace(R.id.fl_main, galleryFragment)
                     .commit()
             }
             R.id.Camera -> {
-                /**
-                TODO: 레이아웃 만든 후에 적용할 예정
-                by 류일웅
-####################################################################################################
                 val cameraFragment = CameraFragment()
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.main_frame, cameraFragment)
+                    .replace(R.id.fl_main, cameraFragment)
                     .commit()
-            }
-####################################################################################################
-                 */
             }
             R.id.Dictionary -> {
                 /**

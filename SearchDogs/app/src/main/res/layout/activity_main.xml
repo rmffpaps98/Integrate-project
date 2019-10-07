@@ -9,18 +9,18 @@
         tools:context="kr.ac.gachon.searchdogs.MainActivity">
 
     <FrameLayout
-            android:id="@+id/main_frame"
+            android:id="@+id/fl_main"
             android:layout_width="0dp"
             android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/nav_view"
+            app:layout_constraintBottom_toTopOf="@id/bnv_main"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" >
+            app:layout_constraintTop_toTopOf="parent">
 
     </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/nav_view"
+            android:id="@+id/bnv_main"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:background="?android:attr/windowBackground"

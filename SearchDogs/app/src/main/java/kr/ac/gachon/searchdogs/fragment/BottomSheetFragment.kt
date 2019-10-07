@@ -21,9 +21,9 @@ class BottomSheetFragment : BottomSheetDialogFragment {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.bnv_check_type, container, false)
-        val imgBtnYes = view.findViewById<ImageButton>(R.id.imgBtn_yes)
-        val imgBtnNo = view.findViewById<ImageButton>(R.id.imgBtn_no)
+        val view = inflater.inflate(R.layout.bnd_check_type, container, false)
+        val imgBtnYes = view.findViewById<ImageButton>(R.id.imgBtn_check_type_yes)
+        val imgBtnNo = view.findViewById<ImageButton>(R.id.imgBtn_check_type_no)
 
         imgBtnYes.setOnClickListener { view ->
             mListener!!.onButtonClicked("imgBtnYes clicked")

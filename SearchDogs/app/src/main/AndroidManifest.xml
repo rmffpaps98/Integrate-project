@@ -25,12 +25,6 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="kr.ac.gachon.searchdogs.fragment.GalleryFragment">
-
-        </activity>
-        <activity android:name="kr.ac.gachon.searchdogs.fragment.DialogActivity">
-
-        </activity>
     </application>
 
 </manifest>

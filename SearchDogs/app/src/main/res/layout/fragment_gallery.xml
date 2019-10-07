@@ -2,18 +2,18 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/framelayout_gallery_fragment_main"
+        android:id="@+id/fl_gallery"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/constlayout_gallery_frame_main"
+            android:id="@+id/cl_gallery_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
         <ImageView
-                android:id="@+id/img_dogGallery"
+                android:id="@+id/img_gallery_dogGallery"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:scaleType="centerCrop"
@@ -23,7 +23,7 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-                android:id="@+id/btn_gallery"
+                android:id="@+id/btn_gallery_upload"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="#00FFFFFF"

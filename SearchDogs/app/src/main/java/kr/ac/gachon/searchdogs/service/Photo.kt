@@ -1,13 +1,8 @@
 /*
-package kr.ac.gachon.searchdogs
+package kr.ac.gachon.searchdogs.service
 
-import android.content.Context
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Matrix
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -17,14 +12,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.exifinterface.media.ExifInterface
 import com.bumptech.glide.Glide
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_photo.*
 import kr.ac.gachon.searchdogs.MainActivity.Companion.mCurrentPhotoPath
+import kr.ac.gachon.searchdogs.R
 import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.InputStream
 import java.lang.Exception
-import java.lang.reflect.Array
 
 class Photo : AppCompatActivity() {
 
@@ -34,7 +25,7 @@ class Photo : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_photo)
+        setContentView(R.layout.fragment_photo)
 
 //        val resultImage = (imgFile.absolutePath)
 
