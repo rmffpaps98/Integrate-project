@@ -3,7 +3,7 @@ package kr.ac.gachon.searchdogs.service
 import android.content.Intent
 import android.provider.MediaStore
 
-class gallery() {
+class Gallery() {
 
     public fun choosePhotoFromGallery() {
         val galleryIntent = Intent(Intent.ACTION_PICK,

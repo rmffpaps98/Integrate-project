@@ -3,26 +3,37 @@ package kr.ac.gachon.searchdogs
 import android.os.Bundle
 import android.view.MenuItem
 import android.view.View
+import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import kr.ac.gachon.searchdogs.fragment.BottomSheetFragment
 import kr.ac.gachon.searchdogs.fragment.GalleryFragment
 
 
-class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity(),
+    BottomNavigationView.OnNavigationItemSelectedListener,
+    BottomSheetFragment.BottomSheetListener {
+
+    private var mTextView: TextView? = null
+
+    private var bottomNavigationViewHeight: Int? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        mTextView = findViewById(R.id.txt_check_type_title)
+
         // bottomNavigationView의 아이템이 선택될 때 호출될 리스너 등록
         val navView = findViewById<View>(R.id.nav_view) as BottomNavigationView
         navView.setOnNavigationItemSelectedListener(this)
 
-        /*
-        카메라 기능 완성되면
-            navView.selectedItemId = R.id.camera
-        로 바꿔야함
-        by 류일웅
+        bottomNavigationViewHeight = navView.measuredHeight
+
+        /**
+        * TODO: 카메라 기능 완성되면
+            navView.selectedItemId = R.id.camera 로 바꿔야함
+        * by 류일웅
          */
         navView.selectedItemId = R.id.Gallery
     }
@@ -38,7 +49,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             }
             R.id.Camera -> {
                 /**
-                레이아웃 만든 후에 적용할 예정 by 류일웅
+                TODO: 레이아웃 만든 후에 적용할 예정
+                by 류일웅
 ####################################################################################################
                 val cameraFragment = CameraFragment()
                 supportFragmentManager
@@ -51,8 +63,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             }
             R.id.Dictionary -> {
                 /**
-                레이아웃 만든 후에 적용할 예정
-                by 류일웅
+                * TODO: 레이아웃 만든 후에 적용할 예정
+                * by 류일웅
 ####################################################################################################
                 val dictionaryFragment = DictionaryFragment()
                 supportFragmentManager
@@ -64,8 +76,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                  */
 
                 /**
-                나중에 따로 파일로 빼서 만들어야 할듯
-                by 류일웅
+                * TODO: 나중에 따로 파일로 빼서 만들어야 할듯
+                * by 류일웅
 ####################################################################################################
                 val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
                 recyclerView_dict.addItemDecoration(divider)
@@ -78,6 +90,27 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         return true
     }
 
+    override fun onButtonClicked(text: String) {
+        mTextView!!.text = text
+    }
+
+    override fun onStart() {
+        super.onStart()
+
+        if (isSetDogImage) {
+            showBottomSheetDialog()
+        }
+    }
+
+    private fun showBottomSheetDialog() {
+        val bottomSheetDialog = BottomSheetFragment()
+
+        bottomSheetDialog.show(supportFragmentManager, "TAG")
+    }
+
+    companion object {
+        var isSetDogImage = false
+    }
 }
 
 // ======================================================================
