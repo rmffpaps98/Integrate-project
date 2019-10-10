@@ -1,114 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:id="@+id/container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="kr.ac.gachon.searchdogs.MainActivity">
+        tools:context="kr.ac.gachon.searchdogs.activity.MainActivity">
 
     <FrameLayout
-            android:id="@+id/fl_main"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@id/bnv_main"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:id="@+id/main_fl"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="?attr/actionBarSize">
 
     </FrameLayout>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bnv_main"
-            android:layout_width="0dp"
+            android:id="@+id/main_bnv"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
             android:background="?android:attr/windowBackground"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:menu="@menu/bottom_nav_menu" >
+            app:menu="@menu/bottom_nav_menu">
 
     </com.google.android.material.bottomnavigation.BottomNavigationView>
 
-<!--    <RelativeLayout-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:background="@android:color/black"-->
-<!--            app:layout_constraintBottom_toTopOf="@+id/nav_view"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent"-->
-<!--            tools:context=".MainActivity">-->
-
-    <!-- 카메라 어플이 새로 실행될때 사용 -->
-<!--        <ImageView-->
-<!--            android:id="@+id/image_view"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="match_parent"-->
-<!--            android:layout_gravity="center_horizontal"-->
-<!--            android:background="@drawable/img_placehlder" />-->
-
-<!--        <Button-->
-<!--            android:id="@+id/btn_capture"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_alignParentBottom="true"-->
-<!--            android:layout_centerHorizontal="true"-->
-<!--            android:layout_marginStart="32dp"-->
-<!--            android:layout_marginTop="32dp"-->
-<!--            android:layout_marginEnd="32dp"-->
-<!--            android:layout_marginBottom="32dp"-->
-<!--            android:text="Capture" />-->
-
-        <!-- 라이브러리 실행 시 사용 -->
-<!--        <io.fotoapparat.view.CameraView-->
-<!--                android:id="@+id/camera_view"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_above="@id/fab_camera" />-->
-
-<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--                android:id="@+id/fab_camera"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_alignParentBottom="true"-->
-<!--                android:layout_centerHorizontal="true"-->
-<!--                android:layout_marginStart="32dp"-->
-<!--                android:layout_marginTop="32dp"-->
-<!--                android:layout_marginEnd="32dp"-->
-<!--                android:layout_marginBottom="32dp"-->
-<!--                android:src="@android:drawable/ic_menu_camera"-->
-<!--                app:backgroundTint="@android:color/white"-->
-<!--                app:fabSize="normal" />-->
-
-<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--                android:id="@+id/fab_flash"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_alignParentBottom="true"-->
-<!--                android:layout_marginStart="32dp"-->
-<!--                android:layout_marginTop="32dp"-->
-<!--                android:layout_marginEnd="32dp"-->
-<!--                android:layout_marginBottom="32dp"-->
-<!--                android:src="@android:drawable/alert_light_frame"-->
-<!--                app:backgroundTint="@android:color/white"-->
-<!--                app:fabSize="normal" />-->
-
-<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
-<!--                android:id="@+id/fab_switch_camera"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_alignParentRight="true"-->
-<!--                android:layout_alignParentBottom="true"-->
-<!--                android:layout_marginStart="32dp"-->
-<!--                android:layout_marginTop="32dp"-->
-<!--                android:layout_marginEnd="32dp"-->
-<!--                android:layout_marginBottom="32dp"-->
-<!--                android:src="@android:drawable/ic_menu_always_landscape_portrait"-->
-<!--                app:backgroundTint="@android:color/white"-->
-<!--                app:fabSize="normal" />-->
-
-<!--    </RelativeLayout>-->
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

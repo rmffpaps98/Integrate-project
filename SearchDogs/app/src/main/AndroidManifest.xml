@@ -3,6 +3,7 @@
           package="kr.ac.gachon.searchdogs">
 
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-feature android:name="android.hardware.camera" android:required="true" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
@@ -16,7 +17,7 @@
         <activity android:name="kr.ac.gachon.searchdogs.DetailDict">
         </activity>
         <activity
-                android:name="kr.ac.gachon.searchdogs.MainActivity"
+                android:name="kr.ac.gachon.searchdogs.activity.MainActivity"
                 android:label="SearchDogs"
                 android:screenOrientation="portrait">
             <intent-filter>
@@ -24,6 +25,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+        </activity>
+        <activity android:name="kr.ac.gachon.searchdogs.fragment.CameraResultActivity">
+
+        </activity>
+        <activity android:name="kr.ac.gachon.searchdogs.activity.DogImageActivity">
+
         </activity>
     </application>
 

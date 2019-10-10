@@ -1,236 +1,257 @@
-package kr.ac.gachon.searchdogs.camera
+/**
+ * 카메라 화면을 구성
+ *
+ * @since: 2019.10.01
+ * @author: 류일웅
+ */
+package kr.ac.gachon.searchdogs.fragment
 
-import android.Manifest
-import android.app.Activity
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.hardware.Camera
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.provider.MediaStore
-import android.util.Log
-import android.view.*
-import android.widget.Button
-import android.widget.Toast
-import androidx.appcompat.app.AlertDialog
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat
-import androidx.core.content.FileProvider
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import kr.ac.gachon.searchdogs.MainActivity
+import io.fotoapparat.Fotoapparat
+import io.fotoapparat.configuration.CameraConfiguration
+import io.fotoapparat.log.logcat
+import io.fotoapparat.log.loggers
+import io.fotoapparat.parameter.ScaleType
+import io.fotoapparat.selector.back
+import io.fotoapparat.selector.front
+import io.fotoapparat.selector.off
+import io.fotoapparat.selector.torch
+import io.fotoapparat.view.CameraView
+import kotlinx.android.synthetic.main.fragment_camera.*
+import kr.ac.gachon.searchdogs.activity.DogImageActivity
+import kr.ac.gachon.searchdogs.activity.MainActivity
 import kr.ac.gachon.searchdogs.R
+import kr.ac.gachon.searchdogs.service.Permission
 import java.io.File
-import java.io.FileNotFoundException
 import java.io.FileOutputStream
 import java.io.IOException
+import java.io.OutputStream
 
-class CameraFragment : Fragment(), SurfaceHolder.Callback, Camera.PictureCallback {
 
-    private var surfaceHolder: SurfaceHolder? = null
-    private var surfaceView: SurfaceView? = null
-    private var camera: Camera? = null
+class CameraFragment : Fragment() {
 
-    private val neededPermissions = arrayOf(
-        Manifest.permission.CAMERA,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-        Manifest.permission.READ_EXTERNAL_STORAGE
-    )
+    private val permission = Permission()
 
-/*    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.fragment_photo)
+    // fotoapprat 라이브러리(카메라 라이브러리)를 사용을 위한 변수 선언
+    private var fotoapparat: Fotoapparat? = null
+    private var fotoapparatState : FotoapparatState? = null
+    private var cameraStatus : CameraState? = null
+    private var flashState: FlashState? = null
 
-        surfaceView = findViewById(R.id.sfv_photo)
-        val result = checkPermission()
-        if (result) {
-
-        }
-    }*/
+    // TODO: 사진 저장 경로를 어플 폴더 안으로 지정하기
+    private val filename = FILE_NAME
+    private val sd = Environment.getExternalStorageDirectory()
+    private val dest = File(sd, filename)
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_photo, container, false)
+        val view = inflater.inflate(R.layout.fragment_camera, container, false)
 
-        surfaceView = view.findViewById(R.id.sfv_photo)
-
-        val result = checkPermission()
-        if (result) {
-            setupSurfaceHolder(view)
-        }
+        createFotoapparat(view)
 
         return view
     }
 
-    private fun checkPermission(): Boolean {
-        val currentAPIVersion = Build.VERSION.SDK_INT
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
 
-        if (currentAPIVersion >= android.os.Build.VERSION_CODES.M) {
-            val permissionsNotGranted = ArrayList<String>()
+        cameraStatus = CameraState.BACK
+        flashState = FlashState.OFF
+        fotoapparatState = FotoapparatState.OFF
 
-            for (permission in neededPermissions) {
-                if (ContextCompat.checkSelfPermission(context!!, permission) != PackageManager.PERMISSION_GRANTED) {
-                    permissionsNotGranted.add(permission)
-                }
-            }
-            if (permissionsNotGranted.size > 0) {
-                var shouldShowAlert = false
-
-                for (permission in permissionsNotGranted) {
-                    shouldShowAlert = ActivityCompat.shouldShowRequestPermissionRationale(context as Activity, permission)
-                }
-
-                val arr = arrayOfNulls<String>(permissionsNotGranted.size)
-                val permissions = permissionsNotGranted.toArray(arr)
-
-                if (shouldShowAlert) {
-                    showPermissionAlert(permissions)
-                } else {
-                    requestPermissions(permissions)
-                }
-                return false
-            }
+        fragmentCamera_fab_camera.setOnClickListener {
+            takePhoto()
         }
-        return true
-    }
 
-    private fun showPermissionAlert(permissions: Array<String?>) {
-        val alertBuilder = AlertDialog.Builder(context as Activity)
-
-        alertBuilder.setCancelable(true)
-        alertBuilder.setTitle(R.string.permission_required)
-        alertBuilder.setMessage(R.string.permission_message)
-        alertBuilder.setPositiveButton(android.R.string.yes) { _, _ -> requestPermissions(permissions) }
-
-        val alert = alertBuilder.create()
-
-        alert.show()
-    }
-
-    private fun requestPermissions(permissions: Array<String?>) {
-        ActivityCompat.requestPermissions(context as Activity, permissions, REQUEST_CODE)
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
-        when (requestCode) {
-            REQUEST_CODE -> {
-                for (result in grantResults) {
-                    if (result == PackageManager.PERMISSION_DENIED) {
-                        Toast.makeText(MainActivity(), R.string.permission_warning, Toast.LENGTH_LONG).show()
-                        setViewVisibility(R.id.msg_photo_permission, View.VISIBLE, view!!)
-                        return
-                    }
-                }
-
-                setupSurfaceHolder(view!!)
-            }
+        fragmentCamera_fab_switchCamera.setOnClickListener {
+            switchCamera()
         }
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-    }
 
-    private fun setViewVisibility(id: Int, visibility: Int, view: View) {
-        val fragmentPhotoView = view.findViewById<View>(id)
-        fragmentPhotoView!!.visibility = visibility
-    }
-
-    private fun setupSurfaceHolder(view: View) {
-        setViewVisibility(R.id.btn_photo_start, View.VISIBLE, view)
-        setViewVisibility(R.id.sfv_photo, View.VISIBLE, view)
-
-        surfaceHolder = surfaceView!!.holder
-        surfaceHolder!!.addCallback(this)
-        setBtnClick(view)
-    }
-
-    private fun setBtnClick(view: View) {
-        val startBtn = view.findViewById<Button>(R.id.btn_photo_start)
-        startBtn?.setOnClickListener { captureImage() }
-    }
-
-    private fun captureImage() {
-        if (camera != null) {
-            camera!!.takePicture(null, null, this)
+        fragmentCamera_fab_flash.setOnClickListener {
+            changeFlashState()
         }
     }
 
-    override fun surfaceCreated(surfaceHolder: SurfaceHolder) {
-        startCamera()
+    override fun onStop() {
+        super.onStop()
+        fotoapparat?.stop()
+        FotoapparatState.OFF
     }
 
-    private fun startCamera() {
-        camera = Camera.open()
-        camera!!.setDisplayOrientation(90)
+    override fun onStart() {
+        super.onStart()
+        if (permission.hasNoPermissions(activity!!)) {
+            permission.requestPermission(activity!!)
+        } else {
+            fotoapparat?.start()
+            fotoapparatState = FotoapparatState.ON
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(!permission.hasNoPermissions(activity!!) && fotoapparatState == FotoapparatState.OFF) {
+            val intent = Intent(activity!!, MainActivity::class.java)
+
+            startActivity(intent)
+            activity!!.finish()
+        }
+    }
+
+    /**
+     * ##################################################
+     * Fotoapprat 라이브러리 초기화하는 기능
+     *
+     * @since: 2019.10.01
+     * @author: 류일웅
+     * @param: view
+     * @return:
+     * ##################################################
+     */
+    private fun createFotoapparat(view: View){
+        val cameraView = view.findViewById<CameraView>(R.id.fragmentCamera_cameraView)
+
+        fotoapparat = Fotoapparat(
+            context = activity!!,
+            view = cameraView,
+            scaleType = ScaleType.CenterCrop,
+            lensPosition = back(),
+            logger = loggers(
+                logcat()
+            ),
+            cameraErrorCallback = { error ->
+                println("Recorder errors: $error")
+            }
+        )
+    }
+
+    /**
+     * ##################################################
+     * 사진 촬영 기능
+     *
+     * @since: 2019.10.01
+     * @author: 류일웅
+     * @param:
+     * @return:
+     * ##################################################
+     */
+    private fun takePhoto() {
+        if (permission.hasNoPermissions(activity!!)) {
+            permission.requestPermission(activity!!)
+        }else{
+            val photoResult = fotoapparat?.takePicture()
+            var bitmap: Bitmap? = null
+
+            photoResult?.toBitmap()?.transform { bitmapPhoto ->
+                // 촬영한 사진을 bitmap으로 변환
+                bitmap = bitmapPhoto.bitmap
+            }?.whenAvailable {
+                saveTakePhotoToBitmap(bitmap!!)
+            }
+        }
+    }
+
+    /**
+     * ##################################################
+     * bitmap으로 변환한 사진을 핸드폰에 저장하는 기능
+     *
+     * @since: 2019.10.01
+     * @author: 류일웅
+     * @param: bitmap
+     * @return:
+     * ##################################################
+     */
+    private fun saveTakePhotoToBitmap(bitmap: Bitmap) {
         try {
-            camera!!.setPreviewDisplay(surfaceHolder)
-            camera!!.startPreview()
+            val stream: OutputStream = FileOutputStream(dest)
+
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+            stream.flush()
+            stream.close()
         } catch (e: IOException) {
             e.printStackTrace()
         }
 
+        val intent = Intent(activity!!, DogImageActivity::class.java)
+
+        intent.putExtra(INTENT_CAMERA_TAG, dest.absolutePath)
+        startActivity(intent)
     }
 
-    override fun surfaceChanged(surfaceHolder: SurfaceHolder, i: Int, i1: Int, i2: Int) {
-        resetCamera()
-    }
+    /**
+     * ##################################################
+     * 사진촬영에서의 Flash 컨트롤 기능
+     *
+     * @since: 2019.10.01
+     * @author: 류일웅
+     * @param:
+     * @return:
+     * ##################################################
+     */
+    private fun changeFlashState() {
+        fotoapparat?.updateConfiguration(
+            CameraConfiguration(
+                flashMode = if(flashState == FlashState.TORCH) off() else torch()
+            )
+        )
 
-    private fun resetCamera() {
-        if (surfaceHolder!!.surface == null) {
-            // Return if preview surface does not exist
-            return
+        if (flashState == FlashState.TORCH) {
+            flashState = FlashState.OFF
         }
-
-        // Stop if preview surface is already running.
-        camera!!.stopPreview()
-        try {
-            // Set preview display
-            camera!!.setPreviewDisplay(surfaceHolder)
-        } catch (e: IOException) {
-            e.printStackTrace()
+        else {
+            flashState = FlashState.TORCH
         }
-
-        // Start the camera preview...
-        camera!!.startPreview()
     }
 
-    override fun surfaceDestroyed(surfaceHolder: SurfaceHolder) {
-        releaseCamera()
-    }
+    /**
+     * ##################################################
+     * 사진촬영에서의 앞, 뒤 화면 전환 기능
+     *
+     * @since: 2019.10.01
+     * @author: 류일웅
+     * @param:
+     * @return:
+     * ##################################################
+     */
+    private fun switchCamera() {
+        fotoapparat?.switchTo(
+            lensPosition =  if (cameraStatus == CameraState.BACK) front() else back(),
+            cameraConfiguration = CameraConfiguration()
+        )
 
-    private fun releaseCamera() {
-        camera!!.stopPreview()
-        camera!!.release()
-        camera = null
-    }
-
-    override fun onPictureTaken(bytes: ByteArray, camera: Camera) {
-        saveImage(bytes)
-
-        resetCamera()
-    }
-
-    private fun saveImage(bytes: ByteArray) {
-        val outStream: FileOutputStream
-        try {
-//            val fileName = "TUTORIALWING_" + System.currentTimeMillis() + ".jpg"
-            val fileName = "test.jpg"
-            val file = File(Environment.getExternalStorageDirectory(), fileName)
-            outStream = FileOutputStream(file)
-            outStream.write(bytes)
-            outStream.close()
-            Toast.makeText(MainActivity(), "Picture Saved: $fileName", Toast.LENGTH_LONG).show()
-        } catch (e: FileNotFoundException) {
-            e.printStackTrace()
-        } catch (e: IOException) {
-            e.printStackTrace()
+        if (cameraStatus == CameraState.BACK) {
+            cameraStatus = CameraState.FRONT
+        }
+        else {
+            cameraStatus = CameraState.BACK
         }
     }
 
     companion object {
-        const val REQUEST_CODE = 100
+        const val INTENT_CAMERA_TAG = "CameraBitmap"
+        const val FILE_NAME = "test22.jpeg"
     }
 
+}
+
+enum class CameraState{
+    FRONT, BACK
+}
+
+enum class FlashState{
+    TORCH, OFF
+}
+
+enum class FotoapparatState{
+    ON, OFF
 }

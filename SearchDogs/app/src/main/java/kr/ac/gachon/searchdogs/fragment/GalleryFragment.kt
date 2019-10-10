@@ -1,31 +1,29 @@
+/**
+ * 갤러리 화면을 구성
+ *
+ * @since: 2019.10.01
+ * @author: 류일웅
+ */
 package kr.ac.gachon.searchdogs.fragment
 
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import android.provider.MediaStore
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.fragment_gallery.*
-import kr.ac.gachon.searchdogs.MainActivity.Companion.isSetDogImage
+import kr.ac.gachon.searchdogs.activity.DogImageActivity
 import kr.ac.gachon.searchdogs.R
+import kr.ac.gachon.searchdogs.service.Permission
 
 class GalleryFragment : Fragment() {
 
-    private var mImageView: ImageView? = null
-    private var mButtonView: Button? = null
-    private var llSendCheckBottomSheet: LinearLayout? = null
+    private val permission = Permission()
 
-    /**
-     * TODO:
-     *  1. 갤러리 메뉴를 다시 눌러도 이미지 유지하기
-     *  2. 이미지 하단 짤리는 부분 수정하기
-     * by 류일웅
-     */
+    private var mButtonView: Button? = null
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -33,38 +31,58 @@ class GalleryFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_gallery, container, false)
 
-        mImageView = view.findViewById(R.id.img_gallery_dogGallery)
-        mButtonView = view.findViewById(R.id.btn_gallery_upload)
-        llSendCheckBottomSheet = view.findViewById(R.id.ll_check_type)
+        mButtonView = view.findViewById(R.id.fragmentGallery__btn_galleryUpload)
 
-        view.findViewById<Button>(R.id.btn_gallery_upload).setOnClickListener { view ->
+        view.findViewById<Button>(R.id.fragmentGallery__btn_galleryUpload).setOnClickListener {
             startGallery()
         }
 
         return view
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+    /**
+     * ##################################################
+     * 스마트폰의 갤러리를 실행하는 기능
+     *
+     * @since: 2019.10.01
+     * @author: 류일웅
+     * @param:
+     * @return:
+     * ##################################################
+     */
+    private fun startGallery() {
+        if (permission.hasNoPermissions(activity!!)) {
+            permission.requestPermission(activity!!)
+        }else{
+            val galleryIntent = Intent(Intent.ACTION_PICK)
 
-        if (requestCode == 1000 && resultCode == Activity.RESULT_OK) {
-            val returnUri = data!!.data
-            val bitmapImage = MediaStore.Images.Media.getBitmap(activity!!.contentResolver, returnUri)
+            galleryIntent.type = INTENT_GALLERY_TYPE
 
-            img_gallery_dogGallery.setImageBitmap(bitmapImage)
-            Log.d("CHECK", "이미지를 설정함")
-            isSetDogImage = true
-            mButtonView!!.visibility = View.INVISIBLE
+            // fragment가 MainActivity에 존재하는지 확인
+            if (isAdded) {
+                startActivityForResult(galleryIntent, IMAGE_PICK_CODE)
+            }
         }
     }
 
-    private fun startGallery() {
-        val cameraIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
-        cameraIntent.type = "image/*"
-        if (cameraIntent.resolveActivity(activity!!.packageManager) != null) {
-            startActivityForResult(cameraIntent, 1000)
+        if (requestCode == IMAGE_PICK_CODE && resultCode == Activity.RESULT_OK) {
+            val returnUri = data?.data.toString()
+
+            val intent = Intent(activity!!, DogImageActivity::class.java)
+
+            intent.putExtra(INTENT_GALLERY_TAG, returnUri)
+
+            startActivity(intent)
         }
+    }
+
+    companion object {
+        const val IMAGE_PICK_CODE = 1000
+        const val INTENT_GALLERY_TYPE = "image/*"
+        const val INTENT_GALLERY_TAG = "GalleryBitmap"
     }
 
 }
