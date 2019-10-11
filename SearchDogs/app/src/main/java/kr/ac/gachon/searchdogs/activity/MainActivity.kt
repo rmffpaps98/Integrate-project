@@ -48,30 +48,7 @@ class MainActivity : AppCompatActivity(),
                     .commit()
             }
             R.id.Dictionary -> {
-                /**
-                 * TODO: 레이아웃 만든 후에 적용할 예정
-                 * by 류일웅
-                ####################################################################################################
-                val dictionaryFragment = DictionaryFragment()
-                supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.main_frame, dictionaryFragment)
-                .commit()
-                }
-                ####################################################################################################
-                 */
-
-                /**
-                 * TODO: 나중에 따로 파일로 빼서 만들어야 할듯
-                 * by 류일웅
-                ####################################################################################################
-                val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-                recyclerView_dict.addItemDecoration(divider)
-                recyclerView_dict.adapter = DictAdapter()
-                recyclerView_dict.layoutManager = LinearLayoutManager(this)
-                ####################################################################################################
-                 */
-            }
+                supportFragmentManager.beginTransaction().replace(R.id.Rel_main, DictFragment()).commit()
         }
         return true
     }
