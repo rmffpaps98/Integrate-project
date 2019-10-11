@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity(),
                     .commit()
             }
             R.id.Dictionary -> {
+                // 메인 프레임에 사전 프래그먼트 삽입 BY. 이정묵
                 supportFragmentManager.beginTransaction().replace(R.id.Rel_main, DictFragment()).commit()
         }
         return true
