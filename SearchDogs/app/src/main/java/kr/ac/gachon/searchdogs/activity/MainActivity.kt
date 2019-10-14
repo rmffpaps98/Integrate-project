@@ -54,18 +54,6 @@ class MainActivity : AppCompatActivity(),
                 .replace(R.id.main_fl, DictFragment())
                 .commit()
             }
-
-
-                /**
-                 * TODO: 나중에 따로 파일로 빼서 만들어야 할듯
-                 * by 류일웅
-                ####################################################################################################
-                val divider = DividerItemDecoration(this, DividerItemDecoration.VERTICAL)
-                recyclerView_dict.addItemDecoration(divider)
-                recyclerView_dict.adapter = DictAdapter()
-                recyclerView_dict.layoutManager = LinearLayoutManager(this)
-                ####################################################################################################
-                 */
         }
         return true
     }
