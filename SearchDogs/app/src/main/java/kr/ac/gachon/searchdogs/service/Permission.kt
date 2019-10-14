@@ -31,7 +31,7 @@ class Permission {
      * @return:
      * ##################################################
      */
-    fun requestPermission(activity: Activity){
+    fun requestPermission(activity: Activity) {
         ActivityCompat.requestPermissions(activity, neededPermissions,0)
     }
 
@@ -45,7 +45,7 @@ class Permission {
      * @return: boolean
      * ##################################################
      */
-    fun hasNoPermissions(context: Context): Boolean{
+    fun hasNoPermissions(context: Context): Boolean {
         return ContextCompat.checkSelfPermission(context, Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED
                 || ContextCompat.checkSelfPermission(context, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED

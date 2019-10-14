@@ -7,9 +7,7 @@
 package kr.ac.gachon.searchdogs.fragment
 
 import android.content.Intent
-import android.graphics.Bitmap
 import android.os.Bundle
-import android.os.Environment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -25,14 +23,11 @@ import io.fotoapparat.selector.off
 import io.fotoapparat.selector.torch
 import io.fotoapparat.view.CameraView
 import kotlinx.android.synthetic.main.fragment_camera.*
+import kr.ac.gachon.searchdogs.R
 import kr.ac.gachon.searchdogs.activity.DogImageActivity
 import kr.ac.gachon.searchdogs.activity.MainActivity
-import kr.ac.gachon.searchdogs.R
 import kr.ac.gachon.searchdogs.service.Permission
 import java.io.File
-import java.io.FileOutputStream
-import java.io.IOException
-import java.io.OutputStream
 
 
 class CameraFragment : Fragment() {
@@ -45,10 +40,7 @@ class CameraFragment : Fragment() {
     private var cameraStatus : CameraState? = null
     private var flashState: FlashState? = null
 
-    // TODO: 사진 저장 경로를 어플 폴더 안으로 지정하기
-    private val filename = FILE_NAME
-    private val sd = Environment.getExternalStorageDirectory()
-    private val dest = File(sd, filename)
+    private val fileName = "TempTakePhotoImage.jpeg"
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -148,44 +140,30 @@ class CameraFragment : Fragment() {
     private fun takePhoto() {
         if (permission.hasNoPermissions(activity!!)) {
             permission.requestPermission(activity!!)
-        }else{
+        } else{
             val photoResult = fotoapparat?.takePicture()
-            var bitmap: Bitmap? = null
 
-            photoResult?.toBitmap()?.transform { bitmapPhoto ->
-                // 촬영한 사진을 bitmap으로 변환
-                bitmap = bitmapPhoto.bitmap
-            }?.whenAvailable {
-                saveTakePhotoToBitmap(bitmap!!)
+            val filename = fileName
+            val sd = context!!.filesDir
+            val dest = File(sd, filename)
+
+            photoResult?.saveToFile(dest)?.whenAvailable {
+                val intent = Intent(activity!!, DogImageActivity::class.java)
+                val extras = Bundle()
+
+                if (cameraStatus == CameraState.FRONT) {
+                    extras.putString(CAMERA_STATE, CAMERA_FRONT)
+                }
+                else if (cameraStatus == CameraState.BACK) {
+                    extras.putString(CAMERA_STATE, CAMERA_BACK)
+                }
+
+                extras.putString(INTENT_CAMERA_TAG, dest.absolutePath)
+
+                intent.putExtras(extras)
+                startActivity(intent)
             }
         }
-    }
-
-    /**
-     * ##################################################
-     * bitmap으로 변환한 사진을 핸드폰에 저장하는 기능
-     *
-     * @since: 2019.10.01
-     * @author: 류일웅
-     * @param: bitmap
-     * @return:
-     * ##################################################
-     */
-    private fun saveTakePhotoToBitmap(bitmap: Bitmap) {
-        try {
-            val stream: OutputStream = FileOutputStream(dest)
-
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
-            stream.flush()
-            stream.close()
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        val intent = Intent(activity!!, DogImageActivity::class.java)
-
-        intent.putExtra(INTENT_CAMERA_TAG, dest.absolutePath)
-        startActivity(intent)
     }
 
     /**
@@ -239,7 +217,9 @@ class CameraFragment : Fragment() {
 
     companion object {
         const val INTENT_CAMERA_TAG = "CameraBitmap"
-        const val FILE_NAME = "test22.jpeg"
+        const val CAMERA_STATE = "TakePhotoCameraState"
+        const val CAMERA_FRONT = "CameraFront"
+        const val CAMERA_BACK = "CameraBack"
     }
 
 }

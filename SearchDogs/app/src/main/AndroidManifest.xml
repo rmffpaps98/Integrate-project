@@ -6,6 +6,7 @@
     <uses-feature android:name="android.hardware.camera" android:required="true" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
             android:allowBackup="true"
@@ -14,7 +15,15 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/AppTheme">
-        <activity android:name="kr.ac.gachon.searchdogs.DetailDict">
+        <activity
+            android:name="kr.ac.gachon.searchdogs.splash.SplashActivity"
+            android:theme="@style/IntroTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name="kr.ac.gachon.searchdogs.service.DetailDict">
         </activity>
         <activity
                 android:name="kr.ac.gachon.searchdogs.activity.MainActivity"
@@ -26,10 +35,11 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="kr.ac.gachon.searchdogs.fragment.CameraResultActivity">
+        <activity
+                android:name="kr.ac.gachon.searchdogs.activity.DogImageActivity">
 
         </activity>
-        <activity android:name="kr.ac.gachon.searchdogs.activity.DogImageActivity">
+        <activity android:name="kr.ac.gachon.searchdogs.service.SocketClient">
 
         </activity>
     </application>

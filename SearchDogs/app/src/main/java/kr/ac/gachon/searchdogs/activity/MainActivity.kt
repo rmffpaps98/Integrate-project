@@ -7,20 +7,18 @@
 package kr.ac.gachon.searchdogs.activity
 
 import android.os.Bundle
+import android.os.StrictMode
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kr.ac.gachon.searchdogs.R
 import kr.ac.gachon.searchdogs.fragment.CameraFragment
+import kr.ac.gachon.searchdogs.fragment.DictFragment
 import kr.ac.gachon.searchdogs.fragment.GalleryFragment
 
 
 class MainActivity : AppCompatActivity(),
     BottomNavigationView.OnNavigationItemSelectedListener {
-
-    private val galleryFragment = GalleryFragment()
-    private val cameraFragment = CameraFragment()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -28,6 +26,9 @@ class MainActivity : AppCompatActivity(),
         // bottomNavigationView의 아이템이 선택될 때 호출될 리스너 등록
         val navView = findViewById<BottomNavigationView>(R.id.main_bnv)
         navView.setOnNavigationItemSelectedListener(this)
+
+        val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
+        StrictMode.setThreadPolicy(policy)
 
         // 앱 실행시 초기 화면 설정
         navView.selectedItemId = R.id.Camera
@@ -38,28 +39,22 @@ class MainActivity : AppCompatActivity(),
             R.id.Gallery -> {
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.main_fl, galleryFragment)
+                    .replace(R.id.main_fl, GalleryFragment())
                     .commit()
             }
             R.id.Camera -> {
                 supportFragmentManager
                     .beginTransaction()
-                    .replace(R.id.main_fl, cameraFragment)
+                    .replace(R.id.main_fl, CameraFragment())
                     .commit()
             }
             R.id.Dictionary -> {
-                /**
-                 * TODO: 레이아웃 만든 후에 적용할 예정
-                 * by 류일웅
-                ####################################################################################################
-                val dictionaryFragment = DictionaryFragment()
                 supportFragmentManager
                 .beginTransaction()
-                .replace(R.id.main_frame, dictionaryFragment)
+                .replace(R.id.main_fl, DictFragment())
                 .commit()
-                }
-                ####################################################################################################
-                 */
+            }
+
 
                 /**
                  * TODO: 나중에 따로 파일로 빼서 만들어야 할듯
@@ -71,7 +66,6 @@ class MainActivity : AppCompatActivity(),
                 recyclerView_dict.layoutManager = LinearLayoutManager(this)
                 ####################################################################################################
                  */
-            }
         }
         return true
     }

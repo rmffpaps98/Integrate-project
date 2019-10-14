@@ -24,6 +24,9 @@ class GalleryFragment : Fragment() {
 
     private var mButtonView: Button? = null
 
+    private val imagePickCode = 1000
+    private val intentGalleryType = "image/*"
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -56,11 +59,11 @@ class GalleryFragment : Fragment() {
         }else{
             val galleryIntent = Intent(Intent.ACTION_PICK)
 
-            galleryIntent.type = INTENT_GALLERY_TYPE
+            galleryIntent.type = intentGalleryType
 
             // fragment가 MainActivity에 존재하는지 확인
             if (isAdded) {
-                startActivityForResult(galleryIntent, IMAGE_PICK_CODE)
+                startActivityForResult(galleryIntent, imagePickCode)
             }
         }
     }
@@ -68,7 +71,7 @@ class GalleryFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if (requestCode == IMAGE_PICK_CODE && resultCode == Activity.RESULT_OK) {
+        if (requestCode == imagePickCode && resultCode == Activity.RESULT_OK) {
             val returnUri = data?.data.toString()
 
             val intent = Intent(activity!!, DogImageActivity::class.java)
@@ -80,8 +83,6 @@ class GalleryFragment : Fragment() {
     }
 
     companion object {
-        const val IMAGE_PICK_CODE = 1000
-        const val INTENT_GALLERY_TYPE = "image/*"
         const val INTENT_GALLERY_TAG = "GalleryBitmap"
     }
 
