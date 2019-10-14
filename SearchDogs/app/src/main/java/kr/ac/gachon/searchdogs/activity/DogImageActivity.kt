@@ -240,7 +240,7 @@ class DogImageActivity : AppCompatActivity() {
         builder.setMessage(dialogMessage)
         builder.setPositiveButton(dialogPositiveButton, ({ dialog, which ->
             // TODO: AI에 사진 전송하기
-            SocketClient().connect()
+            SocketClient().pingYourTCPServerWith("TestMessage")
         }))
         builder.setNegativeButton(dialogNegativeButton, ({ dialog, which ->
             dialog.dismiss()
