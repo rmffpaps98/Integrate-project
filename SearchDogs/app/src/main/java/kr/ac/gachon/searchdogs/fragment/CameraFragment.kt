@@ -149,20 +149,12 @@ class CameraFragment : Fragment() {
 
             photoResult?.saveToFile(dest)?.whenAvailable {
                 val intent = Intent(activity!!, DogImageActivity::class.java)
-                val extras = Bundle()
+                val extra = intent.putExtra(INTENT_CAMERA_TAG, dest.absolutePath)
 
-                if (cameraStatus == CameraState.FRONT) {
-                    extras.putString(CAMERA_STATE, CAMERA_FRONT)
-                }
-                else if (cameraStatus == CameraState.BACK) {
-                    extras.putString(CAMERA_STATE, CAMERA_BACK)
-                }
-
-                extras.putString(INTENT_CAMERA_TAG, dest.absolutePath)
-
-                intent.putExtras(extras)
+                intent.putExtras(extra)
                 startActivity(intent)
             }
+
         }
     }
 
@@ -217,9 +209,6 @@ class CameraFragment : Fragment() {
 
     companion object {
         const val INTENT_CAMERA_TAG = "CameraBitmap"
-        const val CAMERA_STATE = "TakePhotoCameraState"
-        const val CAMERA_FRONT = "CameraFront"
-        const val CAMERA_BACK = "CameraBack"
     }
 
 }

@@ -19,10 +19,9 @@ import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kr.ac.gachon.searchdogs.R
-import kr.ac.gachon.searchdogs.fragment.CameraFragment.Companion.CAMERA_BACK
-import kr.ac.gachon.searchdogs.fragment.CameraFragment.Companion.CAMERA_FRONT
-import kr.ac.gachon.searchdogs.fragment.CameraFragment.Companion.CAMERA_STATE
 import kr.ac.gachon.searchdogs.fragment.CameraFragment.Companion.INTENT_CAMERA_TAG
 import kr.ac.gachon.searchdogs.fragment.GalleryFragment.Companion.INTENT_GALLERY_TAG
 import kr.ac.gachon.searchdogs.service.SocketClient
@@ -49,24 +48,12 @@ class DogImageActivity : AppCompatActivity() {
         mImgButtonNo = findViewById(R.id.dogImageResult_imgBtn_no)
         mImgButtonYes = findViewById(R.id.dogImageResult_imgBtn_yes)
 
-        val extras = intent.extras
-        val cameraExtraData = extras?.getString(INTENT_CAMERA_TAG)
-        val cameraStateData = extras?.getString(CAMERA_STATE)
-
         if (intent.hasExtra(INTENT_GALLERY_TAG)) {
             showPickUpGalleryImage()
         }
-        else if (!cameraExtraData.isNullOrBlank()) {
-            if (cameraStateData == CAMERA_FRONT) {
-                showTakePhotoImage(cameraStateData)
-            }
-            else if(cameraStateData == CAMERA_BACK) {
-                showTakePhotoImage(cameraStateData)
-            }
+        else if (intent.hasExtra(INTENT_CAMERA_TAG)) {
+            showTakePhotoImage()
         }
-//        else if (intent.hasExtra(INTENT_CAMERA_TAG)) {
-//            showTakePhotoImage()
-//        }
 
         mImgButtonYes!!.setOnClickListener {
             showAlertDialog()
@@ -105,53 +92,22 @@ class DogImageActivity : AppCompatActivity() {
      * @return:
      * ##################################################
      */
-    private fun showTakePhotoImage(cameraStateData: String) {
+    private fun showTakePhotoImage() {
         val bitmapStringURI = intent.getStringExtra(INTENT_CAMERA_TAG)
-        val rotatedBitmapURI = getRightAngleImage(bitmapStringURI, cameraStateData)
-        val rotatedURI = Uri.parse(rotatedBitmapURI)
-        val rotatedBitmap = BitmapFactory.decodeFile(rotatedURI.path)
 
-//        val bitmapURI = Uri.parse(bitmapStringURI)
-
-
-//        val ei = ExifInterface(bitmapStringURI)
-//        val orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
-//        var degree: Int
-
-//        when (orientation) {
-//            ExifInterface.ORIENTATION_NORMAL -> degree = 0
-//            ExifInterface.ORIENTATION_ROTATE_90 -> degree = 90
-//            ExifInterface.ORIENTATION_ROTATE_180 -> degree = 180
-//            ExifInterface.ORIENTATION_ROTATE_270 -> degree = 270
-//            else -> degree = 90
-//        }
-
-//        Log.d("CHECK",
-//            "Android: " +
-//                    "${orientation} " +
-//                    "${ExifInterface.ORIENTATION_NORMAL} " +
-//                    "${ExifInterface.ORIENTATION_ROTATE_90} " +
-//                    "${ExifInterface.ORIENTATION_ROTATE_180} " +
-//                    "${ExifInterface.ORIENTATION_ROTATE_270} ")
-
-//        Glide
-//            .with(this)
-//            .load(bitmapURI)
-//            .transform(ImageTransformation(this, degree))
-//            .into(mImageView!!)
-
-
-
-
-        // TODO:
-        //  1. 셀카 모드일때 사진 해결하기
-        //  2. 속도 해결하기
-        mImageView?.setImageBitmap(rotatedBitmap)
+        Glide
+            .with(this)
+            .asBitmap()
+            .load(bitmapStringURI)
+            .diskCacheStrategy(DiskCacheStrategy.NONE)
+            .skipMemoryCache(true)
+            .into(mImageView!!)
     }
 
     /**
      * ##################################################
      * 사진을 올바르게 가져오는 기능
+     * 현재 사용하지 않음(19.10.17)
      *
      * @since: 2019.10.07
      * @author: 류일웅
@@ -184,6 +140,7 @@ class DogImageActivity : AppCompatActivity() {
     /**
      * ##################################################
      * 사진을 회전하는 기능
+     * 현재 사용하지 않음(19.10.17)
      *
      * @since: 2019.10.07
      * @author: 류일웅
@@ -240,7 +197,8 @@ class DogImageActivity : AppCompatActivity() {
         builder.setMessage(dialogMessage)
         builder.setPositiveButton(dialogPositiveButton, ({ dialog, which ->
             // TODO: AI에 사진 전송하기
-            SocketClient().pingYourTCPServerWith("TestMessage")
+            val intent = Intent(this, SocketClient::class.java)
+            startActivity(intent)
         }))
         builder.setNegativeButton(dialogNegativeButton, ({ dialog, which ->
             dialog.dismiss()

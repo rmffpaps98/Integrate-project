@@ -2,17 +2,13 @@ package kr.ac.gachon.searchdogs.service
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.util.Base64
-import android.util.Config
 import android.util.Log
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import cz.msebera.android.httpclient.client.methods.HttpPost
-import cz.msebera.android.httpclient.impl.client.DefaultHttpClient
 import kr.ac.gachon.searchdogs.R
-import kr.ac.gachon.searchdogs.activity.DogImageActivity
 import java.io.*
 import java.lang.Exception
 import java.net.ConnectException
@@ -35,6 +31,8 @@ class SocketClient : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val url = Uri.parse("android.resource://kr.ac.gachon.searchdogs/${R.drawable.a}")
+        pingYourTCPServerWith(url.toString())
     }
 
     fun connect() {
@@ -89,12 +87,21 @@ class SocketClient : AppCompatActivity() {
                         var responseString: String? = null
 
                         try {
+//                            Log.d("CHECK", "drawable://${R.drawable.a}")
+                            val bitmap = BitmapFactory.decodeResource(resources, R.drawable.a)
+                            val imgString = Base64.encodeToString(getBytesFromBitmap(bitmap), Base64.NO_WRAP)
+                            Log.d("CHECK", imgString.length.toString())
+
+
+
+
+
                             val out = PrintWriter(BufferedWriter(it.getOutputStream().writer()),true)
-                            out.println(message)
+                            out.println(imgString)
                             out.flush()
-                            val dis = DataInputStream(FileInputStream(File(Environment.getDataDirectory(), message)))
+                            val dis = DataInputStream(FileInputStream(File(Environment.getDataDirectory(), imgString)))
                             val dos = DataOutputStream(it.getOutputStream())
-                            val buf = ByteArray(1024)
+                            val buf = ByteArray(imgString.length)
                             var totalReadBytes:Long = 0
                             val readBytes : Int = 0
                             val test : Int = dis.read(buf)
@@ -143,6 +150,12 @@ class SocketClient : AppCompatActivity() {
             }
         }).start()
 
+    }
+
+    fun getBytesFromBitmap(bitmap: Bitmap): ByteArray {
+        val stream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, stream)
+        return stream.toByteArray()
     }
 
 }
