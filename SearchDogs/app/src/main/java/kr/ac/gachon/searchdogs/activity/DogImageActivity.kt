@@ -21,6 +21,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.request.RequestListener
 import kr.ac.gachon.searchdogs.R
 import kr.ac.gachon.searchdogs.fragment.CameraFragment.Companion.INTENT_CAMERA_TAG
 import kr.ac.gachon.searchdogs.fragment.GalleryFragment.Companion.INTENT_GALLERY_TAG
@@ -62,6 +63,14 @@ class DogImageActivity : AppCompatActivity() {
         mImgButtonNo!!.setOnClickListener {
             finish()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 
     /**
@@ -115,7 +124,7 @@ class DogImageActivity : AppCompatActivity() {
      * @return: photoPath
      * ##################################################
      */
-    private fun getRightAngleImage(photoPath: String, cameraStateData: String): String {
+    private fun getRightAngleImage(photoPath: String): String {
         try {
             val ei = ExifInterface(photoPath)
             val orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL)
@@ -129,7 +138,7 @@ class DogImageActivity : AppCompatActivity() {
                 else -> degree = 90F
             }
 
-            return rotateImage(degree, photoPath, cameraStateData)
+            return rotateImage(degree, photoPath)
         } catch (e: Exception) {
             e.printStackTrace()
         }
@@ -148,7 +157,7 @@ class DogImageActivity : AppCompatActivity() {
      * @return: imagePath
      * ##################################################
      */
-    private fun rotateImage(degree: Float, imagePath: String, cameraStateData: String): String {
+    private fun rotateImage(degree: Float, imagePath: String): String {
         var rotateDegree = degree
 
         if (rotateDegree <= 0) {

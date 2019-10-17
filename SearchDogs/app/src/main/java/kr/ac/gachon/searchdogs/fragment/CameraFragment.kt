@@ -76,12 +76,14 @@ class CameraFragment : Fragment() {
 
     override fun onStop() {
         super.onStop()
+
         fotoapparat?.stop()
         FotoapparatState.OFF
     }
 
     override fun onStart() {
         super.onStart()
+
         if (permission.hasNoPermissions(activity!!)) {
             permission.requestPermission(activity!!)
         } else {
@@ -92,12 +94,17 @@ class CameraFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+
         if(!permission.hasNoPermissions(activity!!) && fotoapparatState == FotoapparatState.OFF) {
             val intent = Intent(activity!!, MainActivity::class.java)
 
             startActivity(intent)
             activity!!.finish()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 
     /**

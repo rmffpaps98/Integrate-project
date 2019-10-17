@@ -43,6 +43,14 @@ class GalleryFragment : Fragment() {
         return view
     }
 
+    override fun onResume() {
+        super.onResume()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+    }
+
     /**
      * ##################################################
      * 스마트폰의 갤러리를 실행하는 기능

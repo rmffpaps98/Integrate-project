@@ -19,12 +19,15 @@ import kr.ac.gachon.searchdogs.fragment.GalleryFragment
 
 class MainActivity : AppCompatActivity(),
     BottomNavigationView.OnNavigationItemSelectedListener {
+
+    lateinit var navView: BottomNavigationView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         // bottomNavigationView의 아이템이 선택될 때 호출될 리스너 등록
-        val navView = findViewById<BottomNavigationView>(R.id.main_bnv)
+        navView = findViewById<BottomNavigationView>(R.id.main_bnv)
         navView.setOnNavigationItemSelectedListener(this)
 
         val policy = StrictMode.ThreadPolicy.Builder().permitAll().build()
@@ -56,6 +59,14 @@ class MainActivity : AppCompatActivity(),
             }
         }
         return true
+    }
+
+    override fun onResume() {
+        super.onResume()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
     }
 
 }

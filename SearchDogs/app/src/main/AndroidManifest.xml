@@ -23,20 +23,14 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name="kr.ac.gachon.searchdogs.service.DetailDict">
-        </activity>
+        <activity android:name="kr.ac.gachon.searchdogs.service.DetailDict"></activity>
         <activity
                 android:name="kr.ac.gachon.searchdogs.activity.MainActivity"
                 android:label="SearchDogs"
                 android:screenOrientation="portrait">
         </activity>
-        <activity
-                android:name="kr.ac.gachon.searchdogs.activity.DogImageActivity">
-
-        </activity>
-        <activity android:name="kr.ac.gachon.searchdogs.service.SocketClient">
-
-        </activity>
+        <activity android:name="kr.ac.gachon.searchdogs.activity.DogImageActivity"></activity>
+        <activity android:name="kr.ac.gachon.searchdogs.service.SocketClient"></activity>
     </application>
 
 </manifest>
