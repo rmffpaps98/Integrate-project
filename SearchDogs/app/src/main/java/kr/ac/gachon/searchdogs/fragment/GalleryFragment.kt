@@ -88,6 +88,50 @@ class GalleryFragment : Fragment() {
 
             startActivity(intent)
         }
+        
+        // 19.10.31 소켓통신 파일전송 기능 - 이정묵
+        fun SendImage() {
+            val filePath = data?.data.toString()
+            val uri = Uri.parse("$filePath")
+            val path = getRealPathFromURI(uri)
+            val filename = path
+
+            val content = Files.readAllBytes(Paths.get(filename))
+
+            val ip = "121.169.158.111" // 192.168.0.0
+            val port = 7070 // 여기에 port를 입력해주세요
+
+            val socket = Socket(ip, port) // ip와 port를 입력하여 클라이언트 소켓을 만듭니다.
+            val outStream = socket.outputStream // outputStream - 데이터를 내보내는 스트림입니다.
+            val inStream = socket.inputStream // inputStream - 데이터를 받는 스트림입니다.
+
+            val data = content // 데이터는 byteArray로 변경 할 수 있어야 합니다.
+            println(data.size)
+            outStream.write(data) // toByteArray() 파라미터로 charset를 설정할 수 있습니다. 기본값 utf-8
+
+            val available = inStream.available() // 데이터가 있으면 데이터의 사이즈 없다면 -1을 반환합니다.
+            if (available > 0) {
+                val dataArr = ByteArray(available) // 사이즈에 맞게 byte array를 만듭니다.
+                outStream.write(dataArr) // byte array에 데이터를 씁니다.
+                val data = String(dataArr) // byte array의 데이터를 통해 String을 만듭니다.
+                println("data : ${data}")
+            }
+        }
+        SendImage()
+    }
+    
+    // 19.10.31 갤러리 파일 절대 경로값 찾아주는 기능 - 이정묵
+    fun getRealPathFromURI(contentUri:Uri):String {
+        var res  = ""
+        val proj = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor  = activity?.contentResolver?.query(contentUri, proj, null, null, null)
+        if (cursor!!.moveToFirst())
+        {
+            val column_index = cursor.getColumnIndex(MediaStore.Images.Media.DATA)
+            res = cursor.getString(column_index)
+        }
+        cursor.close()
+        return res
     }
 
     companion object {
