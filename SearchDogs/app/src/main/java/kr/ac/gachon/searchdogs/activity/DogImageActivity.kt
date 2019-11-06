@@ -58,12 +58,6 @@ class DogImageActivity : AppCompatActivity() {
         else if (intent.hasExtra(INTENT_CAMERA_TAG)) {
             showTakePhotoImage()
         }
-        else if (intent.hasExtra("result")) {
-            val data = intent.getStringExtra("result")
-            println(data)
-
-            resultView?.text = data
-        }
     }
 
     override fun onResume() {
