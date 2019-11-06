@@ -8,15 +8,23 @@ package kr.ac.gachon.searchdogs.fragment
 
 import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import kr.ac.gachon.searchdogs.activity.DogImageActivity
 import kr.ac.gachon.searchdogs.R
 import kr.ac.gachon.searchdogs.service.Permission
+import java.net.Socket
+import java.io.*
+import id.zelory.compressor.Compressor
+import java.nio.file.Files
+import java.nio.file.Paths
 
 class GalleryFragment : Fragment() {
 
@@ -26,6 +34,8 @@ class GalleryFragment : Fragment() {
 
     private val imagePickCode = 1000
     private val intentGalleryType = "image/*"
+
+    lateinit var TEST : String
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -76,52 +86,64 @@ class GalleryFragment : Fragment() {
         }
     }
 
+    // TODO: 쓰레드로 구현하기. 멈춰있는것처럼 보임
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
+        Toast.makeText(activity, "결과를 예측중입니다. 잠시만 기다려주세요.", Toast.LENGTH_SHORT).show()
+
+        val intent = Intent(activity!!, DogImageActivity::class.java)
+
+        val filePath = data?.data.toString()
+        val uri = Uri.parse("$filePath")
+        val path = getRealPathFromURI(uri)
+
+        val file = File(path)
+
+        val Comp = Compressor(activity).compressToFile(file)
+
+        val content = Files.readAllBytes(Paths.get(Comp.toString()))
+
+        val ip = "121.169.158.111" // 192.168.0.0
+        val port = 7070 // 여기에 port를 입력해주세요
+
+        val socket = Socket(ip, port) // ip와 port를 입력하여 클라이언트 소켓을 만듭니다.
+        val outStream = socket.outputStream // outputStream - 데이터를 내보내는 스트림입니다.
+        val inStream = socket.inputStream // inputStream - 데이터를 받는 스트림입니다.
+
+        val data1 = content.size.toString().toByteArray() + ":".toByteArray() + content// 데이터는 byteArray로 변경 할 수 있어야 합니다.
+
+        outStream.write(data1) // toByteArray() 파라미터로 charset를 설정할 수 있습니다. 기본값 utf-8
+
+        val available = inStream.available() // 데이터가 있으면 데이터의 사이즈 없다면 -1을 반환합니다.
+        if (available > 0) {
+            val dataArr = ByteArray(available) // 사이즈에 맞게 byte array를 만듭니다.
+            outStream.write(dataArr) // byte array에 데이터를 씁니다.
+            val data1 = String(dataArr) // byte array의 데이터를 통해 String을 만듭니다.
+            println("data : ${data1}")
+        }
+
+        val byteArr = ByteArray(1024)
+        val ins = socket.getInputStream()
+        val readByteCount = ins.read(byteArr)
+        val msg = String(byteArr, 0, readByteCount)
+        val test = Uri.parse("$msg").toString()
+
+        TEST = test
+
+        intent.putExtra("result", TEST)
+
         if (requestCode == imagePickCode && resultCode == Activity.RESULT_OK) {
-            val returnUri = data?.data.toString()
+            val filePath = data?.data.toString()
 
-            val intent = Intent(activity!!, DogImageActivity::class.java)
-
-            intent.putExtra(INTENT_GALLERY_TAG, returnUri)
+            intent.putExtra(INTENT_GALLERY_TAG, filePath)
+            intent.putExtra("result", TEST)
 
             startActivity(intent)
         }
-        
-        // 19.10.31 소켓통신 파일전송 기능 - 이정묵
-        fun SendImage() {
-            val filePath = data?.data.toString()
-            val uri = Uri.parse("$filePath")
-            val path = getRealPathFromURI(uri)
-            val filename = path
-
-            val content = Files.readAllBytes(Paths.get(filename))
-
-            val ip = "121.169.158.111" // 192.168.0.0
-            val port = 7070 // 여기에 port를 입력해주세요
-
-            val socket = Socket(ip, port) // ip와 port를 입력하여 클라이언트 소켓을 만듭니다.
-            val outStream = socket.outputStream // outputStream - 데이터를 내보내는 스트림입니다.
-            val inStream = socket.inputStream // inputStream - 데이터를 받는 스트림입니다.
-
-            val data = content // 데이터는 byteArray로 변경 할 수 있어야 합니다.
-            println(data.size)
-            outStream.write(data) // toByteArray() 파라미터로 charset를 설정할 수 있습니다. 기본값 utf-8
-
-            val available = inStream.available() // 데이터가 있으면 데이터의 사이즈 없다면 -1을 반환합니다.
-            if (available > 0) {
-                val dataArr = ByteArray(available) // 사이즈에 맞게 byte array를 만듭니다.
-                outStream.write(dataArr) // byte array에 데이터를 씁니다.
-                val data = String(dataArr) // byte array의 데이터를 통해 String을 만듭니다.
-                println("data : ${data}")
-            }
-        }
-        SendImage()
     }
-    
-    // 19.10.31 갤러리 파일 절대 경로값 찾아주는 기능 - 이정묵
-    fun getRealPathFromURI(contentUri:Uri):String {
+
+    private fun getRealPathFromURI(contentUri: Uri):String {
         var res  = ""
         val proj = arrayOf(MediaStore.Images.Media.DATA)
         val cursor  = activity?.contentResolver?.query(contentUri, proj, null, null, null)

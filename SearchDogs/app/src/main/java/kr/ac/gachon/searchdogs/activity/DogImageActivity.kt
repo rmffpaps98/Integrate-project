@@ -14,14 +14,14 @@ import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.request.RequestListener
+import com.google.firebase.database.*
 import kr.ac.gachon.searchdogs.R
 import kr.ac.gachon.searchdogs.fragment.CameraFragment.Companion.INTENT_CAMERA_TAG
 import kr.ac.gachon.searchdogs.fragment.GalleryFragment.Companion.INTENT_GALLERY_TAG
@@ -32,8 +32,7 @@ class DogImageActivity : AppCompatActivity() {
 
     private var mCoordinateLayout: CoordinatorLayout? = null
     private var mImageView: ImageView? = null
-    private var mImgButtonYes: ImageButton? = null
-    private var mImgButtonNo: ImageButton? = null
+    private var resultView : TextView? = null
 
     private val dialogTitle = "알림"
     private val dialogMessage = "정말로 품종을 확인하시겠습니까?"
@@ -42,12 +41,11 @@ class DogImageActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.dog_image_result)
+        setContentView(R.layout.activity_dog_image)
 
         mCoordinateLayout = findViewById(R.id.dogImageResult_cl)
-        mImageView = findViewById(R.id.dogImageResult_img)
-        mImgButtonNo = findViewById(R.id.dogImageResult_imgBtn_no)
-        mImgButtonYes = findViewById(R.id.dogImageResult_imgBtn_yes)
+        mImageView = findViewById(R.id.dogImage_img)
+        resultView = findViewById(R.id.LoadingText)
 
         if (intent.hasExtra(INTENT_GALLERY_TAG)) {
             showPickUpGalleryImage()
@@ -55,13 +53,11 @@ class DogImageActivity : AppCompatActivity() {
         else if (intent.hasExtra(INTENT_CAMERA_TAG)) {
             showTakePhotoImage()
         }
+        else if (intent.hasExtra("result")) {
+            val data = intent.getStringExtra("result")
+            println(data)
 
-        mImgButtonYes!!.setOnClickListener {
-            showAlertDialog()
-        }
-
-        mImgButtonNo!!.setOnClickListener {
-            finish()
+            resultView?.text = data
         }
     }
 
@@ -192,6 +188,7 @@ class DogImageActivity : AppCompatActivity() {
      * ##################################################
      * 확인 버튼을 눌렀을 시 강아지 품종을 확인할 것인지를
      * 물어보는 dialog 기능
+     * 현재 사용하지 않음(19.11.05)
      *
      * @since: 2019.10.01
      * @author: 류일웅

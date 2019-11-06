@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/dogImageResult_cl">
+
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_gravity="bottom"
+            android:background="@android:color/darker_gray"
+            android:visibility="visible">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="100dp"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="예측 결과"
+            android:textAlignment="center"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/LoadingText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="2dp"
+            android:layout_toEndOf="@+id/textView"
+            android:gravity="center"
+            android:text="로딩중"
+            android:textAlignment="center" />
+
+<!--        <TextView-->
+<!--                android:id="@+id/dogImage_txt"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:layout_centerVertical="true"-->
+<!--                android:layout_marginStart="16dp"-->
+<!--                android:layout_marginEnd="24dp"-->
+<!--                android:layout_toStartOf="@id/dogImage_imgBtn_yes"-->
+<!--                android:text="Collie"-->
+<!--                android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
+<!--                android:textColor="@android:color/black">-->
+
+<!--        </TextView>-->
+<!--        -->
+<!--        <ImageButton-->
+<!--                android:id="@+id/dogImage_imgBtn_no"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_alignParentEnd="true"-->
+<!--                android:layout_marginEnd="24dp"-->
+<!--                android:background="#00FFFFFF"-->
+<!--                app:srcCompat="@drawable/ic_no">-->
+
+<!--        </ImageButton>-->
+
+<!--        <ImageButton-->
+<!--                android:id="@+id/dogImage_imgBtn_yes"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="match_parent"-->
+<!--                android:layout_marginEnd="24dp"-->
+<!--                android:layout_toStartOf="@id/dogImage_imgBtn_no"-->
+<!--                android:background="#00FFFFFF"-->
+<!--                app:srcCompat="@drawable/ic_yes">-->
+
+<!--        </ImageButton>-->
+
+    </RelativeLayout>
+
+    <ImageView
+            android:id="@+id/dogImage_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginBottom="?attr/actionBarSize" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -38,8 +38,17 @@ class DictFragment : Fragment() {
                     var dogdto = document.toObject(DogDTO::class.java)
                     dogList.add(dogdto!!)
                 }
-                val dogAdapter = DictAdapter(this.requireContext(), dogList)
-                listView_Dict.adapter = dogAdapter
+                /*
+                MainActivity 에 아직 attach 안된 오류를 방지하기 위해 작성
+                출처: https://stackoverflow.com/questions/45739067/firebase-database-illegalstateexception-fragment-not-attached-to-activity
+                19.11.04 by 류일웅
+                TODO: 로딩 화면 보여주기
+                 */
+                val activity = activity
+                if (activity != null && isAdded) {
+                    val dogAdapter = DictAdapter(this.requireContext(), dogList)
+                    listView_Dict.adapter = dogAdapter
+                }
             }
             .addOnFailureListener { exception ->
                 exception.printStackTrace()
