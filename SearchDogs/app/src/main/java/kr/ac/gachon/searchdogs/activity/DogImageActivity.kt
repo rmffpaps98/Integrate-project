@@ -27,6 +27,11 @@ import kr.ac.gachon.searchdogs.fragment.CameraFragment.Companion.INTENT_CAMERA_T
 import kr.ac.gachon.searchdogs.fragment.GalleryFragment.Companion.INTENT_GALLERY_TAG
 import kr.ac.gachon.searchdogs.service.SocketClient
 import java.io.FileOutputStream
+import id.zelory.compressor.Compressor
+import java.io.File
+import java.io.FileOutputStream
+import java.net.Socket
+import java.nio.file.Files
 
 class DogImageActivity : AppCompatActivity() {
 
@@ -129,7 +134,7 @@ class DogImageActivity : AppCompatActivity() {
         val readByteCount = ins.read(byteArr)
         val msg = String(byteArr, 0, readByteCount)
         val test = Uri.parse("$msg").toString()
-        TestView?.text = test
+        resultView?.text = test
 
         Glide
             .with(this)
