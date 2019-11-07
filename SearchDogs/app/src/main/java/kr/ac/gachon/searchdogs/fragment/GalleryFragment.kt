@@ -81,8 +81,6 @@ class GalleryFragment : Fragment() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        Toast.makeText(activity, "결과를 예측중입니다. 잠시만 기다려주세요.", Toast.LENGTH_SHORT).show()
-
         val intent = Intent(activity!!, DogImageActivity::class.java)
 
         if (requestCode == imagePickCode && resultCode == Activity.RESULT_OK) {
