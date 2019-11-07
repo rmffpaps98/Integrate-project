@@ -13,15 +13,16 @@ import android.graphics.Matrix
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.provider.MediaStore
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.View
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.google.firebase.database.*
 import kr.ac.gachon.searchdogs.R
 import kr.ac.gachon.searchdogs.fragment.CameraFragment.Companion.INTENT_CAMERA_TAG
 import kr.ac.gachon.searchdogs.fragment.GalleryFragment.Companion.INTENT_GALLERY_TAG
@@ -29,7 +30,6 @@ import kr.ac.gachon.searchdogs.service.SocketClient
 import java.io.FileOutputStream
 import id.zelory.compressor.Compressor
 import java.io.File
-import java.io.FileOutputStream
 import java.net.Socket
 import java.nio.file.Files
 
@@ -38,6 +38,8 @@ class DogImageActivity : AppCompatActivity() {
     private var mCoordinateLayout: CoordinatorLayout? = null
     private var mImageView: ImageView? = null
     private var resultView : TextView? = null
+    private lateinit var progressbar : ProgressBar
+    private lateinit var RESULT : String
 
     private val dialogTitle = "알림"
     private val dialogMessage = "정말로 품종을 확인하시겠습니까?"
@@ -47,10 +49,11 @@ class DogImageActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_dog_image)
-
+        
         mCoordinateLayout = findViewById(R.id.dogImageResult_cl)
         mImageView = findViewById(R.id.dogImage_img)
         resultView = findViewById(R.id.LoadingText)
+        progressbar = findViewById(R.id.loading)
 
         if (intent.hasExtra(INTENT_GALLERY_TAG)) {
             showPickUpGalleryImage()
@@ -83,36 +86,42 @@ class DogImageActivity : AppCompatActivity() {
         val uri = Uri.parse(bitmapStringURI)
         val bitmap = MediaStore.Images.Media.getBitmap(this.contentResolver, uri)
 
-        // 19.11.06 갤러리  소켓 통신 구현 - 이정묵
-        val path = getRealPathFromURI(uri)
-        val file = File(path)
-        val Comp = Compressor(this).compressToFile(file)
-        val content = Files.readAllBytes(Comp.toPath())
-        val ip = "121.169.158.111" // 192.168.0.0
-        val port = 7070 // 여기에 port를 입력해주세요
+        val thread = Thread(Runnable {
+            Handler(Looper.getMainLooper()).post{
+                Toast.makeText(this, "결과 예측중. 잠시만 기다려주세요.", Toast.LENGTH_SHORT).show()
+                progressbar.visibility = View.VISIBLE
+            }
 
-        val socket = Socket(ip, port) // ip와 port를 입력하여 클라이언트 소켓을 만듭니다.
-        val outStream = socket.outputStream // outputStream - 데이터를 내보내는 스트림입니다.
-        val inStream = socket.inputStream // inputStream - 데이터를 받는 스트림입니다.
+            // 19.11.06 갤러리  소켓 통신 구현 - 이정묵 > 19.11.07 Thread로 구현, 로딩 
+            val path = getRealPathFromURI(uri)
+            val file = File(path)
+            val Comp = Compressor(this).compressToFile(file)
+            val content = Files.readAllBytes(Comp.toPath())
+            val ip = "121.169.158.111" // 192.168.0.0
+            val port = 7070 // 여기에 port를 입력해주세요
 
-        val data1 = content.size.toString().toByteArray() + ":".toByteArray() + content// 데이터는 byteArray로 변경 할 수 있어야 합니다.
+            val socket = Socket(ip, port) // ip와 port를 입력하여 클라이언트 소켓을 만듭니다.
+            val outStream = socket.outputStream // outputStream - 데이터를 내보내는 스트림입니다.
 
-        outStream.write(data1) // toByteArray() 파라미터로 charset를 설정할 수 있습니다. 기본값 utf-8
+            val data = content.size.toString().toByteArray() + ":".toByteArray() + content// 데이터는 byteArray로 변경 할 수 있어야 합니다.
 
-        val available = inStream.available() // 데이터가 있으면 데이터의 사이즈 없다면 -1을 반환합니다.
-        if (available > 0) {
-            val dataArr = ByteArray(available) // 사이즈에 맞게 byte array를 만듭니다.
-            outStream.write(dataArr) // byte array에 데이터를 씁니다.
-            val data1 = String(dataArr) // byte array의 데이터를 통해 String을 만듭니다.
-            println("data : ${data1}")
-        }
+            outStream.write(data) // toByteArray() 파라미터로 charset를 설정할 수 있습니다. 기본값 utf-8
 
-        val byteArr = ByteArray(1024)
-        val ins = socket.getInputStream()
-        val readByteCount = ins.read(byteArr)
-        val msg = String(byteArr, 0, readByteCount)
-        val test = Uri.parse("$msg").toString()
-        resultView?.text = test
+            val byteArr = ByteArray(1024)
+            val ins = socket.getInputStream()
+            val readByteCount = ins.read(byteArr)
+            val msg = String(byteArr, 0, readByteCount)
+            val test = Uri.parse("$msg").toString()
+            RESULT = test
+
+            Handler(Looper.getMainLooper()).post{
+                resultView?.text = RESULT
+                progressbar.visibility = View.GONE
+
+            }
+        })
+
+        thread.start()
 
         mImageView?.setImageBitmap(bitmap)
     }
@@ -131,36 +140,39 @@ class DogImageActivity : AppCompatActivity() {
         val bitmapStringURI = intent.getStringExtra(INTENT_CAMERA_TAG)
         val rotatedBitmapURI = getRightAngleImage(bitmapStringURI, cameraStateData)
         
-        // 19.11.06 사진촬영한 것 소켓 통신 구현 - 이정묵
-        val rotatedURI = Uri.parse(rotatedBitmapURI)
-        val file = File(rotatedBitmapURI)
-        val Comp = Compressor(this).compressToFile(file)
-        val content = Files.readAllBytes(Comp.toPath())
-        val ip = "121.169.158.111" // 192.168.0.0
-        val port = 7070 // 여기에 port를 입력해주세요
+        val thread = Thread(Runnable {
+            Handler(Looper.getMainLooper()).post{
+                Toast.makeText(this, "결과 예측중. 잠시만 기다려주세요.", Toast.LENGTH_SHORT).show()
+                progressbar.visibility = View.VISIBLE
+            }
+            // 19.11.06 사진촬영한 것 소켓 통신 구현 - 이정묵 > 19.11.07 Thread로 구현, 로딩 
+            val file = File(rotatedBitmapURI)
+            val Comp = Compressor(this).compressToFile(file)
+            val content = Files.readAllBytes(Comp.toPath())
+            val ip = "121.169.158.111" // 192.168.0.0
+            val port = 7070 // 여기에 port를 입력해주세요
 
-        val socket = Socket(ip, port) // ip와 port를 입력하여 클라이언트 소켓을 만듭니다.
-        val outStream = socket.outputStream // outputStream - 데이터를 내보내는 스트림입니다.
-        val inStream = socket.inputStream // inputStream - 데이터를 받는 스트림입니다.
+            val socket = Socket(ip, port) // ip와 port를 입력하여 클라이언트 소켓을 만듭니다.
+            val outStream = socket.outputStream // outputStream - 데이터를 내보내는 스트림입니다.
 
-        val data1 = content.size.toString().toByteArray() + ":".toByteArray() + content// 데이터는 byteArray로 변경 할 수 있어야 합니다.
+            val data = content.size.toString().toByteArray() + ":".toByteArray() + content// 데이터는 byteArray로 변경 할 수 있어야 합니다.
 
-        outStream.write(data1) // toByteArray() 파라미터로 charset를 설정할 수 있습니다. 기본값 utf-8
+            outStream.write(data) // toByteArray() 파라미터로 charset를 설정할 수 있습니다. 기본값 utf-8
 
-        val available = inStream.available() // 데이터가 있으면 데이터의 사이즈 없다면 -1을 반환합니다.
-        if (available > 0) {
-            val dataArr = ByteArray(available) // 사이즈에 맞게 byte array를 만듭니다.
-            outStream.write(dataArr) // byte array에 데이터를 씁니다.
-            val data1 = String(dataArr) // byte array의 데이터를 통해 String을 만듭니다.
-            println("data : ${data1}")
-        }
+            val byteArr = ByteArray(1024)
+            val ins = socket.getInputStream()
+            val readByteCount = ins.read(byteArr)
+            val msg = String(byteArr, 0, readByteCount)
+            val test = Uri.parse("$msg").toString()
+            RESULT = test
+            resultView?.text = RESULT
 
-        val byteArr = ByteArray(1024)
-        val ins = socket.getInputStream()
-        val readByteCount = ins.read(byteArr)
-        val msg = String(byteArr, 0, readByteCount)
-        val test = Uri.parse("$msg").toString()
-        resultView?.text = test
+            Handler(Looper.getMainLooper()).post{
+                progressbar.visibility = View.GONE
+            }
+        })
+
+        thread.start()
 
         Glide
             .with(this)
