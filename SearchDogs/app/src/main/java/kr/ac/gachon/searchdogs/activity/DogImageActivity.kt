@@ -138,7 +138,6 @@ class DogImageActivity : AppCompatActivity() {
      */
     private fun showTakePhotoImage() {
         val bitmapStringURI = intent.getStringExtra(INTENT_CAMERA_TAG)
-        val rotatedBitmapURI = getRightAngleImage(bitmapStringURI, cameraStateData)
         
         val thread = Thread(Runnable {
             Handler(Looper.getMainLooper()).post{
@@ -146,7 +145,7 @@ class DogImageActivity : AppCompatActivity() {
                 progressbar.visibility = View.VISIBLE
             }
             // 19.11.06 사진촬영한 것 소켓 통신 구현 - 이정묵 > 19.11.07 Thread로 구현, 로딩 
-            val file = File(rotatedBitmapURI)
+            val file = File(bitmapStringURI)
             val Comp = Compressor(this).compressToFile(file)
             val content = Files.readAllBytes(Comp.toPath())
             val ip = "121.169.158.111" // 192.168.0.0
