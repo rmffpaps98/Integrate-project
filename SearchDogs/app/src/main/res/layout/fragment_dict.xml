@@ -5,6 +5,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".DictFragment">
+        
+   <ProgressBar
+        android:id="@+id/DictProgressbar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|center_horizontal"
+        android:foregroundGravity="center"
+        android:visibility="invisible" />
 
     <ListView
             android:id="@+id/listView_Dict"
