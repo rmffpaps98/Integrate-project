@@ -284,5 +284,17 @@ class DogImageActivity : AppCompatActivity() {
         }))
         builder.show()
     }
-
+    
+    private fun getRealPathFromURI(contentUri: Uri):String {
+        var res  = ""
+        val proj = arrayOf(MediaStore.Images.Media.DATA)
+        val cursor  = this?.contentResolver?.query(contentUri, proj, null, null, null)
+        if (cursor!!.moveToFirst())
+        {
+            val column_index = cursor.getColumnIndex(MediaStore.Images.Media.DATA)
+            res = cursor.getString(column_index)
+        }
+        cursor.close()
+        return res
+    }
 }
