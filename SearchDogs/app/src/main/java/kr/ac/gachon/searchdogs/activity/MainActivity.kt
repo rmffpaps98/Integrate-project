@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity(),
     private var firstTime : Long = 0
     private var secondTime : Long = 0
 
-    lateinit var navView: BottomNavigationView
+    private lateinit var navView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
