@@ -6,7 +6,7 @@ buildscript {
         mavenCentral()
         jcenter()
         google()  // Google's Maven repository
-        
+
     }
     dependencies {
         classpath 'com.android.tools.build:gradle:3.5.1'

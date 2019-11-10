@@ -10,17 +10,20 @@
     tools:context=".activity.ButtonTestActivity">
 
     <ImageView
-        android:id="@+id/img_test"
+        android:id="@+id/imgView_button_test"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
     </ImageView>
 
     <Button
+        android:id="@+id/btn_button_test"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_test"
-        android:text="Button">
+        android:paddingTop="0dp"
+        android:paddingLeft="0dp"
+        android:layout_marginTop="0dp"
+        android:layout_marginLeft="0dp">
 
     </Button>
 

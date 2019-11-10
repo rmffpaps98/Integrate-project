@@ -76,7 +76,7 @@ class DogImageActivity : AppCompatActivity() {
      * 갤러리에서 가져온 이미지를 보여주는 기능
      *
      * @since: 2019.10.01
-     * @author: 류일웅
+     * @author: 류일웅, 이정묵
      * @param:
      * @return:
      * ##################################################
@@ -131,7 +131,7 @@ class DogImageActivity : AppCompatActivity() {
      * 사진촬영한 이미지를 보여주는 기능
      *
      * @since: 2019.10.01
-     * @author: 류일웅
+     * @author: 류일웅, 이정묵
      * @param:
      * @return:
      * ##################################################
@@ -297,4 +297,5 @@ class DogImageActivity : AppCompatActivity() {
         cursor.close()
         return res
     }
+
 }

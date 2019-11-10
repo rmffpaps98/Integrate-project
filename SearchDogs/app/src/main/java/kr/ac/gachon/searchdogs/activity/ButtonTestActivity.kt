@@ -6,53 +6,53 @@
  */
 package kr.ac.gachon.searchdogs.activity
 
-import android.content.Intent
-import android.graphics.Rect
 import android.os.Bundle
-import android.util.Log
 import android.widget.Button
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import kr.ac.gachon.searchdogs.R
 
+
 class ButtonTestActivity : AppCompatActivity() {
 
-    private val xDelta = 200
-    private val toXDelta = 333
-    private val yDelta = 750
-    private val toYDelta = 1049
+    private lateinit var mImageView: ImageView
+    private lateinit var mButton: Button
 
-    private var mImageView: ImageView? = null
-    private var mButton: Button? = null
+    private val top = 200
+    private val left = 250
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_button_test)
 
-        mImageView = findViewById(R.id.img_test)
-        mButton = findViewById(R.id.btn_test)
+        mImageView = findViewById(R.id.imgView_button_test)
+        mButton = findViewById(R.id.btn_button_test)
 
-//        mImageView!!.setImageResource(R.drawable.test_dog)
+        val dm = resources.displayMetrics
+        val topSize = Math.round(top * dm.density)
+        val leftSize = Math.round(left * dm.density)
+
+        mButton.setPadding(leftSize, topSize, 0, 0)
+
+        val param = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.WRAP_CONTENT,
+            RelativeLayout.LayoutParams.WRAP_CONTENT
+        )
+
+        param.leftMargin = left
+        mButton.layoutParams = param
+
         Glide
             .with(this)
             .asBitmap()
             .load(R.drawable.test_dog)
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .skipMemoryCache(true)
-            .into(mImageView!!)
-
-        val params = RelativeLayout.LayoutParams(
-            RelativeLayout.LayoutParams.WRAP_CONTENT,
-            RelativeLayout.LayoutParams.WRAP_CONTENT
-        )
-
-        params.setMargins(xDelta,toXDelta,0,0)
-
-        mButton!!.setPadding(550, 716, 0, 0)
-        mButton!!.layoutParams = params
+            .into(mImageView)
     }
 
 }
