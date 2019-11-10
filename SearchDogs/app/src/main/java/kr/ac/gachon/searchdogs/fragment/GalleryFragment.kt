@@ -23,7 +23,7 @@ class GalleryFragment : Fragment() {
 
     private val permission = Permission()
 
-    private var mButtonView: Button? = null
+    private lateinit var mButtonView: Button
 
     private val imagePickCode = 1000
     private val intentGalleryType = "image/*"
@@ -77,7 +77,6 @@ class GalleryFragment : Fragment() {
         }
     }
 
-    // TODO: 쓰레드로 구현하기. 멈춰있는것처럼 보임
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
