@@ -7,27 +7,23 @@
 package kr.ac.gachon.searchdogs.activity
 
 import android.content.Intent
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.graphics.Matrix
-import android.media.ExifInterface
 import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.*
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import kr.ac.gachon.searchdogs.R
 import kr.ac.gachon.searchdogs.fragment.CameraFragment.Companion.INTENT_CAMERA_TAG
 import kr.ac.gachon.searchdogs.fragment.GalleryFragment.Companion.INTENT_GALLERY_TAG
-import kr.ac.gachon.searchdogs.service.SocketClient
-import java.io.FileOutputStream
 import id.zelory.compressor.Compressor
 import kr.ac.gachon.searchdogs.service.DetailDict
 import java.io.File
@@ -41,6 +37,8 @@ class DogImageActivity : AppCompatActivity() {
     private lateinit var resultView : TextView
     private lateinit var progressbar : ProgressBar
     private lateinit var RESULT : String
+
+    var db = FirebaseFirestore.getInstance()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -113,6 +111,10 @@ class DogImageActivity : AppCompatActivity() {
             Handler(Looper.getMainLooper()).post{
                 resultView.text = RESULT
                 progressbar.visibility = View.GONE
+
+                resultView.setOnClickListener {
+                    getDogDicData(RESULT)
+                }
             }
         })
 
@@ -122,8 +124,6 @@ class DogImageActivity : AppCompatActivity() {
             .with(this)
             .asBitmap()
             .load(bitmap)
-//            .diskCacheStrategy(DiskCacheStrategy.NONE)
-//            .skipMemoryCache(true)
             .into(mImageView)
     }
 
@@ -169,6 +169,10 @@ class DogImageActivity : AppCompatActivity() {
 
             Handler(Looper.getMainLooper()).post{
                 progressbar.visibility = View.GONE
+
+                resultView.setOnClickListener {
+                    getDogDicData(RESULT)
+                }
             }
         })
 
@@ -195,4 +199,42 @@ class DogImageActivity : AppCompatActivity() {
         cursor.close()
         return res
     }
+
+    private fun getDogDicData(resultDog: String) {
+        val settings = FirebaseFirestoreSettings.Builder()
+            .setPersistenceEnabled(true)
+            .build()
+
+        Log.d("CHECK", resultDog)
+
+        db.firestoreSettings = settings
+        val thread = Thread(Runnable {
+            Handler(Looper.getMainLooper()).post{
+                Toast.makeText(this, "사전 불러오는 중", Toast.LENGTH_SHORT).show()
+            }
+
+            val firstResultString = resultDog.split(",".toRegex())
+
+            db.collection("DogBreeds").document(firstResultString[0]).get()
+                .addOnSuccessListener { document ->
+                    val intent = Intent(this, DetailDict::class.java)
+
+                    if (document != null) {
+                        intent.putExtra("name", document.data!!["name"] as String)
+                        intent.putExtra("psn", document.data!!["psn"] as String)
+                        intent.putExtra("birth", document.data!!["birth"] as String)
+                        intent.putExtra("life", document.data!!["life"] as String)
+
+                        startActivity(intent)
+                    }
+                    else
+                        Log.d("CHECK", "No such document")
+                }
+                .addOnFailureListener { exception ->
+                    exception.printStackTrace()
+                }
+        })
+        thread.start()
+    }
+
 }
