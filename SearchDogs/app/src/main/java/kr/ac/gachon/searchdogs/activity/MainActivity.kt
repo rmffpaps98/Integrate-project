@@ -6,6 +6,7 @@
  */
 package kr.ac.gachon.searchdogs.activity
 
+import android.content.Intent
 import android.os.Bundle
 import android.os.StrictMode
 import android.view.MenuItem
@@ -39,6 +40,8 @@ class MainActivity : AppCompatActivity(),
 
         // 앱 실행시 초기 화면 설정
         navView.selectedItemId = R.id.Camera
+
+        notice()
     }
 
     override fun onBackPressed() {
@@ -75,6 +78,11 @@ class MainActivity : AppCompatActivity(),
             }
         }
         return true
+    }
+
+    private fun notice() {
+        val intent = Intent(this, NoticeActivity::class.java)
+        startActivityForResult(intent, 1)
     }
 
     override fun onResume() {

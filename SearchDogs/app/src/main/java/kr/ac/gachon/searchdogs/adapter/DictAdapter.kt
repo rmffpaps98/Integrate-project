@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.BaseAdapter
+import android.widget.ImageView
 import android.widget.TextView
 import kr.ac.gachon.searchdogs.R
 import kr.ac.gachon.searchdogs.data.DogDTO
@@ -16,14 +17,14 @@ class DictAdapter (val context: Context, val dogList : ArrayList<DogDTO>) : Base
         val view: View = LayoutInflater.from(context).inflate(R.layout.list_item_dict, null)
 
 
-        //val dogPhoto = view.findViewById<ImageView>(R.id.img_Dogs)
+        val dogPhoto = view.findViewById<ImageView>(R.id.img_Dogs)
         val dogName = view.findViewById<TextView>(R.id.txt_Dogs_name)
 
 
         val dog = dogList[p0]
-        //val resourceId = context.resources.getIdentifier(dog.photo, "drawable", context.packageName)
+        val resourceId = context.resources.getIdentifier(dog.photo, "drawable", context.packageName)
         dogName.text = dog.name
-        //dogPhoto.setImageResource(resourceId)
+        dogPhoto.setImageResource(resourceId)
 
         view.setOnClickListener{
             val intent = Intent(view.context, DetailDict::class.java)
@@ -31,6 +32,7 @@ class DictAdapter (val context: Context, val dogList : ArrayList<DogDTO>) : Base
             intent.putExtra("psn", dog.psn)
             intent.putExtra("birth", dog.birth)
             intent.putExtra("life", dog.life)
+            intent.putExtra("photo", dog.photo)
             view.context.startActivity(intent)
         }
 

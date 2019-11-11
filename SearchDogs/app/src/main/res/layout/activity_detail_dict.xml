@@ -7,15 +7,13 @@
         android:layout_height="match_parent"
         tools:context="kr.ac.gachon.searchdogs.service.DetailDict">
 
-    <de.hdodenhof.circleimageview.CircleImageView
+    <ImageView
             android:layout_width="400dp"
             android:layout_height="200dp" app:srcCompat="@android:drawable/ic_menu_gallery"
             android:id="@+id/img_Dt" app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="32dp" app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="32dp" app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="32dp"
-            app:civ_border_width="2dp"
-            app:civ_border_color="#FF000000"/>
+            android:layout_marginEnd="32dp"/>
 
     <babushkatext.BabushkaText
             android:id="@+id/txt_Dt_name"

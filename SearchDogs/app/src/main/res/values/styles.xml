@@ -13,7 +13,7 @@
     </style>
 
     <style name="IntroTheme" parent="Theme.AppCompat.NoActionBar">
-        <item name="android:windowBackground">@drawable/test</item>
+        <item name="android:windowBackground">@drawable/splash_main</item>
     </style>
 
 </resources>

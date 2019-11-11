@@ -3,6 +3,7 @@ package kr.ac.gachon.searchdogs.service
 import android.graphics.Color
 import android.graphics.Typeface
 import android.os.Bundle
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import babushkatext.BabushkaText
@@ -22,8 +23,9 @@ class DetailDict : AppCompatActivity() {
         val recPsn = intent.getStringExtra("psn")
         val recBirth = intent.getStringExtra("birth")
         val recLife = intent.getStringExtra("life")
+        val recPhoto = intent.getStringExtra("photo")
 
-        val dogImage = findViewById<CircleImageView>(R.id.img_Dt)
+        val dogImage = findViewById<ImageView>(R.id.img_Dt)
         val dogName = findViewById<BabushkaText>(R.id.txt_Dt_name)
         val dogPsn = findViewById<BabushkaText>(R.id.txt_Dt_psn)
         val dogBirth = findViewById<BabushkaText>(R.id.txt_Dt_birth)
@@ -33,10 +35,12 @@ class DetailDict : AppCompatActivity() {
         val birth = findViewById<BabushkaText>(R.id.Birth)
         val life = findViewById<BabushkaText>(R.id.Life)
 
+        val resourceId = resources.getIdentifier(recPhoto, "drawable", packageName)
+
         Glide
             .with(this)
             .asBitmap()
-            .load(R.drawable.a)
+            .load(resourceId)
             .diskCacheStrategy(DiskCacheStrategy.NONE)
             .skipMemoryCache(true)
             .into(dogImage!!)

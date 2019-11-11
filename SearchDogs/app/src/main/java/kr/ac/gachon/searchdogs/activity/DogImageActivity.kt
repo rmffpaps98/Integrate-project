@@ -199,7 +199,7 @@ class DogImageActivity : AppCompatActivity() {
         cursor.close()
         return res
     }
-    
+
     private fun getDogDicData(resultDog: String) {
         val settings = FirebaseFirestoreSettings.Builder()
             .setPersistenceEnabled(true)
